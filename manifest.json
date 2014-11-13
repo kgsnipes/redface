@@ -1,0 +1,15 @@
+{
+  "name": "Red Face",
+  "description": "Facelift for Redmine",
+  "version": "1.0",
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "permissions":[
+  					"https://projects.groupfmg.com/*",
+					"webview"
+  				],
+  "icons": { "16": "images/RF_org_16.png", "128": "images/RF_org_128.png" }
+}
