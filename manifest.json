@@ -8,7 +8,8 @@
     }
   },
   "permissions":[
-  					"https://projects.groupfmg.com/*",
+  					"http://*",
+            "https://*",
 					"webview"
   				],
   "icons": { "16": "images/RF_org_16.png", "128": "images/RF_org_128.png" }
