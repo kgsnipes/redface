@@ -1,6 +1,6 @@
 
 
-var redfaceapp=angular.module('redfaceapp', ['ngRoute','redfacecontrollers'	]);
+var redfaceapp=angular.module('redfaceapp', ['ngRoute']);
 
 
 
