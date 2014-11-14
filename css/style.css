@@ -41,3 +41,27 @@ border: 1px solid #aaa;
 color: #555;
 padding: 5px;
 }
+
+.sideMenu
+{
+	list-style: none;
+
+}
+
+.sideMenu li{
+	float:left;
+	margin:10px;
+
+}
+
+.content
+{
+	width:98%;
+	margin:10px;
+	border:1px solid #ccc;
+}
+
+.menudiv
+{
+	height:50px;
+}

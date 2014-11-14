@@ -23,9 +23,14 @@ redfaceapp.service('redmineService', function($http) {
          return $http.get(domain+'/users/current.json',{headers:header});
       };
 
-      
+  var getProjectsListForProfile= function(domain,header,offset,limit) {
+         return $http.get(domain+"/projects.json?offset="+offset+"&limit="+self.limit,{headers:header});
+      };
+
+
   return {
-    getCurrentUserProfile: getCurrentUserProfile
+    getCurrentUserProfile: getCurrentUserProfile,
+    getProjectsListForProfile:getProjectsListForProfile
   };
 
 });
