@@ -1,0 +1,13 @@
+<ul class="sideMenu">
+	<li>
+		<label>Projects</label>
+		<select ng-model="selectedProject" ng-change="updateProjectInfo();">
+			 <option ng-repeat="x in projects.projects" value="{{x.id}}">
+		      {{ x.name }}
+		    </option>
+		</select>
+	</li>
+	<li>
+		<a ng-click="showBugVisualization();">Bug Visualization</a>
+	</li>
+</ul>
