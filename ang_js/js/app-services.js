@@ -24,13 +24,23 @@ redfaceapp.service('redmineService', function($http) {
       };
 
   var getProjectsListForProfile= function(domain,header,offset,limit) {
-         return $http.get(domain+"/projects.json?offset="+offset+"&limit="+self.limit,{headers:header});
+         return $http.get(domain+"/projects.json?offset="+offset+"&limit="+limit,{headers:header});
+      };
+
+    var getProjectDetails= function(domain,header,id) {
+         return $http.get(domain+"/projects/"+id+".json?include=trackers,issue_categories",{headers:header});
+      };
+
+  var getProjectIssues= function(domain,header,id,trackerid,offset,limit) {
+         return $http.get(domain+"/issues.json?project_id="+id+"&tracker_id="+trackerid+"&offset="+offset+"&limit="+limit,{headers:header});
       };
 
 
   return {
     getCurrentUserProfile: getCurrentUserProfile,
-    getProjectsListForProfile:getProjectsListForProfile
+    getProjectsListForProfile:getProjectsListForProfile,
+    getProjectDetails:getProjectDetails,
+    getProjectIssues:getProjectIssues
   };
 
 });

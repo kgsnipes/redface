@@ -1,7 +1,31 @@
-<div >
+<div ng-init="init()" >
 	<div class="menudiv" ng-include src=" 'partials/menu.html' "></div>
 	<div class="content" >
-	home
-	{{user.domain}}
+	<div ng-show="currentproject.showcurrentprojectinfo">
+		<ul class="projectInfo" >
+			<li><label>Project Name:</label>{{currentproject.name}}</li>
+			<li><label>Project Description:</label>{{currentproject.description}}</li>
+			<li><label>Project ID:</label>{{currentproject.id}}</li>
+			<li><label>Project Identifier:</label>{{currentproject.identifier}}</li>
+			<li><label>Project Created On:</label>{{currentproject.createdOn}}</li>
+		</ul>
+		
+	</div>
+	<div ng-show="!currentproject.showcurrentprojectinfo">
+	
+		<ul class="projectInfoError" >
+			<li>{{currentproject.errormsg}}</li>
+		</ul>
+	</div>
+	<div ng-show="currentproject.showtrackerdata" class="trackerlistingDiv">
+		
+		<ul class="trackerlisting">
+			 <li ng-repeat="x in currentproject.trackerdata">
+		      <a ng-click="showTrackerSplitup(x.name)">{{x.name}}  <span>{{x.issueCount}}</span></a>
+		    </li>
+		</select>
+		
+	</div>
 	</div>
 </div>
+<div class="loading" ng-show="showloading"><div>Loading...</div></div>
