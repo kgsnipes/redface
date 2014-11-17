@@ -30,28 +30,28 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
 redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location',
   function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
     
-     offset=0;
-   limit=10;
-   userdata=cacheService.getData("user");
-   //get current user data
-   $scope.showloading=true;
-   var promise=redmineService.getCurrentUserProfile(userdata.domain,cacheService.getData("ajaxheader"));
-   promise.then(
-          function(payload) { 
-           
-              cacheService.setData("currentUserProfile",payload.data.user);
-              $scope.promiseForProject(offset,limit);
-          },
-          function(errorPayload) {
-              console.error('failure loading movie', errorPayload);
-          });
-   
-  
+     $scope.promiseForInit=function(off,lim)
+   {
+     $scope.userdata=cacheService.getData("user");
+     //get current user data
+     $scope.showloading=true;
+     var promise=redmineService.getCurrentUserProfile($scope.userdata.domain,cacheService.getData("ajaxheader"));
+     promise.then(
+            function(payload) { 
+             
+                cacheService.setData("currentUserProfile",payload.data.user);
+                $scope.promiseForProject(0,100);
+            },
+            function(errorPayload) {
+                console.error('failure loading movie', errorPayload);
+            });
+     
+  };
    
 
    $scope.promiseForProject=function(off,lim)
    {
-      var promiseProjectList=redmineService.getProjectsListForProfile(userdata.domain,cacheService.getData("ajaxheader"),off,lim);
+      var promiseProjectList=redmineService.getProjectsListForProfile($scope.userdata.domain,cacheService.getData("ajaxheader"),off,lim);
       promiseProjectList.then(
           function(payload) { 
             
@@ -92,7 +92,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    $scope.promiseForIssues=function(projectid,off,lim)
    {
-      var promiseProjectIssueList=redmineService.getProjectIssuesWithoutTrackers(userdata.domain,cacheService.getData("ajaxheader"),projectid,off,lim);
+      var promiseProjectIssueList=redmineService.getProjectIssuesWithoutTrackers($scope.userdata.domain,cacheService.getData("ajaxheader"),projectid,off,lim);
       promiseProjectIssueList.then(
           function(payload) { 
             
@@ -123,7 +123,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
     $scope.showloading=true;
       console.log(this.selectedProject);
       $scope.currentproject={};
-      var promiseProjectInfo=redmineService.getProjectDetails(userdata.domain,cacheService.getData("ajaxheader"),this.selectedProject);
+      var promiseProjectInfo=redmineService.getProjectDetails($scope.userdata.domain,cacheService.getData("ajaxheader"),this.selectedProject);
       promiseProjectInfo.then(
           function(payload) { 
              
@@ -167,11 +167,11 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
           $scope.currentproject.showcurrentprojectinfo=false;
           $scope.currentproject.showtrackerdata=false;
           $scope.projects=undefined;
-         
+         $scope.promiseForInit();
       }
       else
       {
-       
+
       }
       
       
