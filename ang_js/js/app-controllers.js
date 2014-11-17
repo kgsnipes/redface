@@ -122,6 +122,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
    {
     $scope.showloading=true;
       console.log(this.selectedProject);
+      $scope.userdata=cacheService.getData("user");
       $scope.currentproject={};
       var promiseProjectInfo=redmineService.getProjectDetails($scope.userdata.domain,cacheService.getData("ajaxheader"),this.selectedProject);
       promiseProjectInfo.then(
@@ -151,6 +152,13 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.userdata[id+'']));
       console.log(id);
       $location.path( "/issues" );
+   };
+
+   $scope.showUnassignedIssues=function(id)
+   {
+      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.issuedata.unassigned));
+      console.log(id);
+      $location.path( "/unassignedissues" );
    };
 
    $scope.init=function()
@@ -220,6 +228,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               //user data
               if(payload.data.issues[i].assigned_to==undefined)
               {
+                $scope.currentproject.issuedata.unassigned.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
                  $scope.currentproject.issuedata.unassignedcount++;
               }
              
@@ -301,8 +310,38 @@ redfaceapp.controller('IssueController', ['$scope', '$http','$rootScope','cacheS
       $scope.currentproject=cacheService.getData("currentProject");
       $scope.currentMemberDetail = cacheService.getData("currentMemberDetail");
       $scope.issuedata=$scope.currentproject.userdata[$scope.currentMemberDetail.id+''].issueid;
-      console.log($scope.userdata);
-      console.log($scope.issuedata);
+      
+
+   };
+
+   $scope.gotoProjectDetails=function()
+   {
+       $location.path( "/home" );
+   };
+
+  
+    
+    
+  }]);
+
+redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location',
+  function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
+    
+  
+
+   $scope.showTrackerSplitup=function(name)
+   {
+      console.log(name);
+   };
+
+   $scope.init=function()
+   {
+      
+      $scope.userdata=cacheService.getData("user");
+      $scope.currentproject=cacheService.getData("currentProject");
+      $scope.currentMemberDetail = cacheService.getData("currentMemberDetail");
+      $scope.issuedata=$scope.currentMemberDetail;
+      
 
    };
 

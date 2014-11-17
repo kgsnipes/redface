@@ -9,7 +9,7 @@
 			<li><label>Project Identifier:</label>{{currentproject.identifier}}</li>
 			<li><label>Project Created On:</label>{{currentproject.createdOn}}</li>
 			<li><label>Total Issue Count:</label>{{currentproject.issuedata.total_count}}</li>
-			<li><label>Unassigned Issue Count:</label>{{currentproject.issuedata.unassignedcount}}</li>
+			<li ng-click="showUnassignedIssues()"><label>Unassigned Issue Count:</label>{{currentproject.issuedata.unassignedcount}}</li>
 		</ul>
 		
 	</div>
