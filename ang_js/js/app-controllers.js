@@ -87,59 +87,22 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    };
 
-    $scope.promiseForTrackerIssues=function(projectid,trackername,trackerid,off,lim)
+  /*  $scope.promiseForTrackerIssues=function(projectid,trackername,trackerid,off,lim)
    {
       var promiseProjectTrackerList=redmineService.getProjectIssues(userdata.domain,cacheService.getData("ajaxheader"),projectid,trackerid,off,lim);
       promiseProjectTrackerList.then(
           function(payload) { 
             
-            if($scope.currentproject.trackerdata==undefined)
-            {
-              $scope.currentproject.trackerdata={};
-              $scope.currentproject.trackercount=0;
-            }
-            if(payload.data.total_count==0)
-            {
-                if($scope.currentproject.trackerdata[trackername]==undefined)
-                    {
-                      $scope.currentproject.trackerdata[trackername]={};
-                      $scope.currentproject.trackerdata[trackername].name=trackername;
-                      $scope.currentproject.trackerdata[trackername].issueCount=1;
-                      $scope.currentproject.trackercount=$scope.currentproject.trackercount+1;
-                    }
-                    
-            }
-              
-              for(i=0;i<payload.data.issues.length;i++)
-              {
-                if(typeof payload.data.issues[i]=="object")
-                 {
-                    if($scope.currentproject.trackerdata[payload.data.issues[i].tracker.name]==undefined)
-                    {
-                      $scope.currentproject.trackerdata[payload.data.issues[i].tracker.name]={};
-                      $scope.currentproject.trackerdata[payload.data.issues[i].tracker.name].name=payload.data.issues[i].tracker.name;
-                      $scope.currentproject.trackerdata[payload.data.issues[i].tracker.name].issueCount=1;
-                      $scope.currentproject.trackercount=$scope.currentproject.trackercount+1;
-                    }
-                    else
-                    {
-                      $scope.currentproject.trackerdata[payload.data.issues[i].tracker.name].issueCount=$scope.currentproject.trackerdata[payload.data.issues[i].tracker.name].issueCount+1;
-                    }
-                 }
-              }
-                 
-                
+             
+            $scope.manipulateTaskTrackers(payload,trackername,trackerid);
             
-
-            if(payload.data.issues.total_count>off)
+            if(payload.data.total_count>off)
             {
               $scope.promiseForTrackerIssues(projectid,trackername,trackerid,off+lim,lim);
             }
             
             cacheService.setData("currentProject",angular.copy($scope.currentproject));
-           
-           console.log($scope.currentproject.trackercount);
-           console.log($scope.currentproject.trackers.length);
+           console.log($scope.currentproject);
            if($scope.currentproject.trackercount==$scope.currentproject.trackers.length)
            {
             $scope.currentproject.showtrackerdata=true;
@@ -154,6 +117,34 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               console.error('failure loading movie', errorPayload);
           });
 
+   }; */
+
+
+   $scope.promiseForIssues=function(projectid,off,lim)
+   {
+      var promiseProjectIssueList=redmineService.getProjectIssuesWithoutTrackers(userdata.domain,cacheService.getData("ajaxheader"),projectid,off,lim);
+      promiseProjectIssueList.then(
+          function(payload) { 
+            
+            $scope.manipulateTaskTrackers(payload);
+
+            if(payload.data.total_count>off)
+            {
+              $scope.promiseForIssues(projectid,off+lim,lim);
+            }
+            else
+            {
+              $scope.showloading=false;
+            }
+            
+            cacheService.setData("currentProject",angular.copy($scope.currentproject));
+            
+           
+          },
+          function(errorPayload) {
+              console.error('failure loading movie', errorPayload);
+          });
+
    };
 
 
@@ -161,6 +152,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
    {
     $scope.showloading=true;
       console.log(this.selectedProject);
+      $scope.currentproject={};
       var promiseProjectInfo=redmineService.getProjectDetails(userdata.domain,cacheService.getData("ajaxheader"),this.selectedProject);
       promiseProjectInfo.then(
           function(payload) { 
@@ -172,11 +164,10 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
             $scope.currentproject.createdOn=payload.data.project.created_on;
             $scope.currentproject.showcurrentprojectinfo=true;
             $scope.currentproject.trackers=payload.data.project.trackers;
-           cacheService.setData("currentProject",angular.copy($scope.currentproject));
-          
-           for(i=0;i<$scope.currentproject.trackers.length;i++)
-                $scope.promiseForTrackerIssues($scope.currentproject.id,$scope.currentproject.trackers[i].name,$scope.currentproject.trackers[i].id,0,100);
-              
+            cacheService.setData("currentProject",angular.copy($scope.currentproject));
+
+            $scope.promiseForIssues($scope.currentproject.id,0,100);
+           
           },
           function(errorPayload) {
              $scope.currentproject.errormsg="Project info not found.";
@@ -210,6 +201,115 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    };
 
+   $scope.manipulateTaskTrackers=function(payload)
+   {
+      if(payload.data.issues!=undefined && payload.data.issues.length>0)
+      {
+          if($scope.currentproject.trackerdata==undefined)
+          {
+              $scope.currentproject.trackerdata={};
+          }
+
+          if($scope.currentproject.issuedata==undefined)
+          {
+            $scope.currentproject.issuedata={};
+            $scope.currentproject.issuedata.total_count=0;
+            $scope.currentproject.issuedata.unassignedcount=0;
+          }
+          
+
+          if($scope.currentproject.userdata==undefined)
+          {
+            $scope.currentproject.userdata={};
+          }
+
+          for(i=0;i<payload.data.issues.length;i++)
+          {
+            $scope.currentproject.issuedata.total_count++;
+            //tracker data
+              if($scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+'']==undefined)
+              {
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+'']={};
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count=1;
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].name=payload.data.issues[i].tracker.name;
+
+              }
+              else
+              {
+                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count++;
+              }
+
+              //user data
+              if(payload.data.issues[i].assigned_to==undefined)
+              {
+                 $scope.currentproject.issuedata.unassignedcount++;
+              }
+             
+              if(payload.data.issues[i].assigned_to!=undefined && payload.data.issues[i].assigned_to.id!=undefined && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']==undefined)
+              {
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']={};
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid=[];
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push(payload.data.issues[i].id);
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount=1;
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].name=payload.data.issues[i].assigned_to.name;
+
+              }
+              else if(payload.data.issues[i].assigned_to!=undefined && payload.data.issues[i].assigned_to.id!=undefined && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']!=undefined)
+              {
+                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push(payload.data.issues[i].id);
+                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount++;
+              }
+
+              if(payload.data.issues[i].assigned_to!=undefined && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata==undefined)
+              {
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata={};
+              }
+
+              if(payload.data.issues[i].assigned_to!=undefined &&  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+'']==undefined)
+              {
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+'']={};
+                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata={};
+               $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].count=1;
+               $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].name=payload.data.issues[i].tracker.name;
+
+
+              }
+              else if(payload.data.issues[i].assigned_to!=undefined &&  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+'']!=undefined )
+              {
+                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].count++;
+              }
+
+              if(payload.data.issues[i].assigned_to!=undefined && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata!=undefined)
+              {
+                if($scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata[payload.data.issues[i].status.id+'']==undefined)
+                {
+                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata[payload.data.issues[i].status.id+'']={};
+                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata[payload.data.issues[i].status.id+''].name=payload.data.issues[i].status.name;
+                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata[payload.data.issues[i].status.id+''].count=1;
+                }
+                else
+                {
+                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata[payload.data.issues[i].status.id+''].count++;
+                }
+              }
+
+
+               //issue data
+              if($scope.currentproject.issuedata[payload.data.issues[i].id+'']==undefined)
+              {
+                $scope.currentproject.issuedata[payload.data.issues[i].id+'']={};
+                $scope.currentproject.issuedata[payload.data.issues[i].id+''].statusdata={};
+                $scope.currentproject.issuedata[payload.data.issues[i].id+''].statusdata.id=payload.data.issues[i].status.id;
+                $scope.currentproject.issuedata[payload.data.issues[i].id+''].statusdata.name=payload.data.issues[i].status.name;
+
+              }
+              
+              
+          }
+      }
+   };
+
+  
     
     
   }]);

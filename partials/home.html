@@ -8,22 +8,42 @@
 			<li><label>Project ID:</label>{{currentproject.id}}</li>
 			<li><label>Project Identifier:</label>{{currentproject.identifier}}</li>
 			<li><label>Project Created On:</label>{{currentproject.createdOn}}</li>
+			<li><label>Total Issue Count:</label>{{currentproject.issuedata.total_count}}</li>
+			<li><label>Unassigned Issue Count:</label>{{currentproject.issuedata.unassignedcount}}</li>
 		</ul>
 		
 	</div>
 	<div ng-show="!currentproject.showcurrentprojectinfo">
-	
 		<ul class="projectInfoError" >
 			<li>{{currentproject.errormsg}}</li>
 		</ul>
 	</div>
-	<div ng-show="currentproject.showtrackerdata" class="trackerlistingDiv">
-		
+	<div ng-show="currentproject.showcurrentprojectinfo" class="trackerlistingDiv">
+		<h3>Overall Split</h3>
 		<ul class="trackerlisting">
 			 <li ng-repeat="x in currentproject.trackerdata">
-		      <a ng-click="showTrackerSplitup(x.name)">{{x.name}}  <span>{{x.issueCount}}</span></a>
+		      <a ng-click="showTrackerSplitup(x.name)">{{x.name}}  <span>{{x.count}}</span></a>
 		    </li>
-		</select>
+		</ul>
+	</div>
+	<div ng-show="currentproject.showcurrentprojectinfo" class="trackerlistingDiv">
+		<h3>Team Split</h3>
+		<ul class="teamListing">
+			 <li ng-repeat="x in currentproject.userdata">
+
+		      <b ng-click="showTrackerSplitup(x.name)">{{x.name}}</b>
+		      <ul class="teamTrackerListing">
+		      	 <li ng-repeat="y in x.trackerdata">
+		      	 	<b>{{y.name}}</b> : <b>{{y.count}}</b>
+		      	 	 <ul class="teamTrackerListing">
+				      	 <li ng-repeat="z in y.statusdata">
+				      	 	<b>{{z.name}}</b> : <b>{{z.count}}</b>
+				      	 </li>
+				      </ul>
+		      	 </li>
+		      </ul>
+		    </li>
+		</ul>
 		
 	</div>
 	</div>

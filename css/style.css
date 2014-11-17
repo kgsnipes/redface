@@ -102,7 +102,7 @@ border-radius: 20px;
 	padding:20px;
 	float:left;
 	border:1px solid #ccc;
-	border-radius: 999px;
+	border-radius: 15px;
 	text-align: center;
 	width: 60px;
 	margin-top: 10px;
@@ -143,3 +143,19 @@ border-radius: 20px;
 	margin-top: 24%;
 }
 
+
+.teamListing
+{
+	width:100%;
+	list-style: none;
+}
+
+.teamListing li
+{
+	margin:10px;
+}
+
+.teamTrackerListing
+{
+	margin-left:50px;
+}
