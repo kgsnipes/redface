@@ -29,22 +29,31 @@
 	<div style="width:100%;height:1px;"></div>
 	<div ng-show="currentproject.showcurrentprojectinfo" class="trackerlistingDiv">
 		<h3>Team Split</h3>
-		<ul class="teamListing">
-			 <li ng-repeat="x in currentproject.userdata">
+		<div class="CSSTableGenerator margin-spacing" ng-repeat="x in currentproject.userdata" >
+		<table  >
+			
+				<tr>
+					<td>Team Member Name</td>
+					<td ng-repeat="y in x.trackerdata">
+						{{y.name}}  <b>({{y.count}})</b>
+				      
+					</td>
+				</tr>
 
-		      <a ng-click="showTeamMemberDetailIssues(x.id)"><b ng-click="showTrackerSplitup(x.name)">{{x.name}}</b></a>
-		      <ul class="teamTrackerListing">
-		      	 <li ng-repeat="y in x.trackerdata">
-		      	 	<b>{{y.name}}</b> : <b>{{y.count}}</b>
-		      	 	 <ul class="teamTrackerListing">
+				<tr >
+					<td ng-click="showTeamMemberDetailIssues(x.id)">{{x.name}}</td>
+					<td ng-repeat="y in x.trackerdata">
+						<ul>
 				      	 <li ng-repeat="z in y.statusdata">
 				      	 	<b>{{z.name}}</b> : <b>{{z.count}}</b>
 				      	 </li>
 				      </ul>
-		      	 </li>
-		      </ul>
-		    </li>
-		</ul>
+					</td>
+
+				</tr>
+			
+		</table>
+		</div>
 		
 	</div>
 	</div>

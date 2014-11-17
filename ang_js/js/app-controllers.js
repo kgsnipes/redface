@@ -159,6 +159,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
       $scope.currentproject=cacheService.getData("currentProject");
       $scope.projects=cacheService.getData("userProjectList");
+
       if($scope.currentproject==undefined && $scope.projects==undefined)
       {
           $scope.currentproject={};
@@ -167,6 +168,10 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
           $scope.currentproject.showtrackerdata=false;
           $scope.projects=undefined;
          
+      }
+      else
+      {
+       
       }
       
       
@@ -187,6 +192,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
             $scope.currentproject.issuedata={};
             $scope.currentproject.issuedata.total_count=0;
             $scope.currentproject.issuedata.unassignedcount=0;
+            $scope.currentproject.issuedata.unassigned=[];
           }
           
 
