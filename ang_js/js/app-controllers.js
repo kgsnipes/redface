@@ -27,8 +27,8 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
     
   }]);
 
-redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheService','redmineService',
-  function ($scope, $http,$rootScope,cacheService,redmineService,$http) {
+redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location',
+  function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
     
      offset=0;
    limit=10;
@@ -87,37 +87,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    };
 
-  /*  $scope.promiseForTrackerIssues=function(projectid,trackername,trackerid,off,lim)
-   {
-      var promiseProjectTrackerList=redmineService.getProjectIssues(userdata.domain,cacheService.getData("ajaxheader"),projectid,trackerid,off,lim);
-      promiseProjectTrackerList.then(
-          function(payload) { 
-            
-             
-            $scope.manipulateTaskTrackers(payload,trackername,trackerid);
-            
-            if(payload.data.total_count>off)
-            {
-              $scope.promiseForTrackerIssues(projectid,trackername,trackerid,off+lim,lim);
-            }
-            
-            cacheService.setData("currentProject",angular.copy($scope.currentproject));
-           console.log($scope.currentproject);
-           if($scope.currentproject.trackercount==$scope.currentproject.trackers.length)
-           {
-            $scope.currentproject.showtrackerdata=true;
-             $scope.showloading=false;
-           }
-                
-            
-           
-              
-          },
-          function(errorPayload) {
-              console.error('failure loading movie', errorPayload);
-          });
-
-   }; */
+  
 
 
    $scope.promiseForIssues=function(projectid,off,lim)
@@ -176,9 +146,11 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    };
 
-   $scope.showTrackerSplitup=function(name)
+   $scope.showTeamMemberDetailIssues=function(id)
    {
-      console.log(name);
+      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.userdata[id+'']));
+      console.log(id);
+      $location.path( "/issues" );
    };
 
    $scope.init=function()
@@ -249,14 +221,15 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               {
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']={};
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid=[];
-                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push(payload.data.issues[i].id);
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount=1;
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].name=payload.data.issues[i].assigned_to.name;
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].id=payload.data.issues[i].assigned_to.id;
 
               }
               else if(payload.data.issues[i].assigned_to!=undefined && payload.data.issues[i].assigned_to.id!=undefined && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']!=undefined)
               {
-                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push(payload.data.issues[i].id);
+                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount++;
               }
 
@@ -293,20 +266,43 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
                 }
               }
 
-
-               //issue data
-              if($scope.currentproject.issuedata[payload.data.issues[i].id+'']==undefined)
-              {
-                $scope.currentproject.issuedata[payload.data.issues[i].id+'']={};
-                $scope.currentproject.issuedata[payload.data.issues[i].id+''].statusdata={};
-                $scope.currentproject.issuedata[payload.data.issues[i].id+''].statusdata.id=payload.data.issues[i].status.id;
-                $scope.currentproject.issuedata[payload.data.issues[i].id+''].statusdata.name=payload.data.issues[i].status.name;
-
-              }
-              
               
           }
       }
+   };
+
+  
+    
+    
+  }]);
+
+
+
+redfaceapp.controller('IssueController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location',
+  function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
+    
+  
+
+   $scope.showTrackerSplitup=function(name)
+   {
+      console.log(name);
+   };
+
+   $scope.init=function()
+   {
+      
+      $scope.userdata=cacheService.getData("user");
+      $scope.currentproject=cacheService.getData("currentProject");
+      $scope.currentMemberDetail = cacheService.getData("currentMemberDetail");
+      $scope.issuedata=$scope.currentproject.userdata[$scope.currentMemberDetail.id+''].issueid;
+      console.log($scope.userdata);
+      console.log($scope.issuedata);
+
+   };
+
+   $scope.gotoProjectDetails=function()
+   {
+       $location.path( "/home" );
    };
 
   

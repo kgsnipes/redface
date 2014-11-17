@@ -1,0 +1,9 @@
+<div ng-init="init()">
+	<button ng-click="gotoProjectDetails()">back</button>
+	<h3>Issue List - {{issuedata.length}} </h3>
+	<ul>
+		<li ng-repeat="x in issuedata">
+			<a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issueid}} - {{x.issuename}}</b></a>
+		</li>
+	</ul>
+</div>

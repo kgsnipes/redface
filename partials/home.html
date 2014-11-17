@@ -22,7 +22,7 @@
 		<h3>Overall Split</h3>
 		<ul class="trackerlisting">
 			 <li ng-repeat="x in currentproject.trackerdata">
-		      <a ng-click="showTrackerSplitup(x.name)">{{x.name}}  <span>{{x.count}}</span></a>
+		      <a>{{x.name}}  <span>{{x.count}}</span></a>
 		    </li>
 		</ul>
 	</div>
@@ -32,7 +32,7 @@
 		<ul class="teamListing">
 			 <li ng-repeat="x in currentproject.userdata">
 
-		      <b ng-click="showTrackerSplitup(x.name)">{{x.name}}</b>
+		      <a ng-click="showTeamMemberDetailIssues(x.id)"><b ng-click="showTrackerSplitup(x.name)">{{x.name}}</b></a>
 		      <ul class="teamTrackerListing">
 		      	 <li ng-repeat="y in x.trackerdata">
 		      	 	<b>{{y.name}}</b> : <b>{{y.count}}</b>

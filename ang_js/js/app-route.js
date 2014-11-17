@@ -9,6 +9,10 @@ redfaceapp.config(['$routeProvider',
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
       }).
+      when('/issues', {
+        templateUrl: 'partials/issues.html',
+        controller: 'IssueController'
+      }).
       otherwise({
         redirectTo: '/'
       });
