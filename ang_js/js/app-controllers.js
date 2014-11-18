@@ -212,6 +212,13 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       $scope.updateProjectInfo();
    };
 
+   $scope.showTrackerIssues=function(id)
+   {
+      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.trackerdata[id+''].issueid));
+      //console.log($scope.currentproject.trackerdata[id+'']);
+      $location.path( "/unassignedissues" );
+   };
+
    $scope.manipulateTaskTrackers=function(payload)
    {
       if(payload.data.issues!=undefined && payload.data.issues.length>0)
@@ -242,12 +249,16 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               if($scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+'']==undefined)
               {
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+'']={};
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid=[];
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count=1;
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].name=payload.data.issues[i].tracker.name;
+                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].id=payload.data.issues[i].tracker.id;
 
               }
               else
               {
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
                  $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count++;
               }
 
@@ -380,4 +391,5 @@ redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScop
     
     
   }]);
+
 

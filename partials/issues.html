@@ -5,10 +5,12 @@
 		<tr>
 			<td>Issue</td>
 			<td>Title</td>
+			<td>Status</td>
 		</tr>
 		<tr ng-repeat="x in issuedata">
 			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issueid}}</b></a></td>
 			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issuename}}</b></a></td>
+			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issuestatus.name}}</b></a></td>
 		</tr>
 	</table>
 </div>

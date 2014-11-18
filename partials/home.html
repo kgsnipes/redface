@@ -24,7 +24,7 @@
 		<h3>Overall Split</h3>
 		<ul class="trackerlisting">
 			 <li ng-repeat="x in currentproject.trackerdata">
-		      <a>{{x.name}}  <span>{{x.count}}</span></a>
+		      <a ng-click="showTrackerIssues(x.id)">{{x.name}}  <span>{{x.count}}</span></a>
 		    </li>
 		</ul>
 	</div>
