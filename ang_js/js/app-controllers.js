@@ -182,6 +182,25 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       $location.path( "/unassignedissues" );
    };
 
+   $scope.showTeamMemberTrackerIssues=function(id,tid)
+   {console.log(tid);
+      userdata=$scope.currentproject.userdata[id+''];
+      issueid=[];
+      for(i=0;i<userdata.issueid.length;i++)
+      {
+        console.log(userdata.issueid[i].trackerid);
+        if(userdata.issueid[i].trackerid==tid)
+        {
+          console.log("added");
+           issueid.push(userdata.issueid[i]);
+        }
+           
+      }
+      cacheService.setData("currentMemberDetail",angular.copy(issueid));
+      console.log(id);
+      $location.path( "/unassignedissues" );
+   };
+
    $scope.init=function()
    {
       console.log("hello");
@@ -214,6 +233,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    $scope.showTrackerIssues=function(id)
    {
+    console.log(id);
       cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.trackerdata[id+''].issueid));
       //console.log($scope.currentproject.trackerdata[id+'']);
       $location.path( "/unassignedissues" );
@@ -250,7 +270,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               {
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+'']={};
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid=[];
-                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id});
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count=1;
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].name=payload.data.issues[i].tracker.name;
                  $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].id=payload.data.issues[i].tracker.id;
@@ -258,7 +278,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               }
               else
               {
-                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id});
                  $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count++;
               }
 
@@ -273,7 +293,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               {
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']={};
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid=[];
-                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id});
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount=1;
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].name=payload.data.issues[i].assigned_to.name;
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].id=payload.data.issues[i].assigned_to.id;
@@ -281,7 +301,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               }
               else if(payload.data.issues[i].assigned_to!=undefined && payload.data.issues[i].assigned_to.id!=undefined && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']!=undefined)
               {
-                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
+                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id});
                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount++;
               }
 
@@ -295,6 +315,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+'']={};
                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata={};
                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].count=1;
+               $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].id=payload.data.issues[i].tracker.id;
                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].name=payload.data.issues[i].tracker.name;
 
 
@@ -376,8 +397,8 @@ redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScop
       
       $scope.userdata=cacheService.getData("user");
       $scope.currentproject=cacheService.getData("currentProject");
-      $scope.currentMemberDetail = cacheService.getData("currentMemberDetail");
-      $scope.issuedata=$scope.currentMemberDetail;
+     $scope.issuedata = cacheService.getData("currentMemberDetail");
+     
       
 
    };

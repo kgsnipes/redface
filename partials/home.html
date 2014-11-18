@@ -36,7 +36,7 @@
 			
 				<tr>
 					<td>Team Member Name</td>
-					<td ng-repeat="y in x.trackerdata">
+					<td ng-repeat="y in x.trackerdata" ng-click="showTeamMemberTrackerIssues(x.id,y.id)">
 						{{y.name}}  <b>({{y.count}})</b>
 				      
 					</td>
