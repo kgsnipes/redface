@@ -35,6 +35,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
      $scope.userdata=cacheService.getData("user");
      //get current user data
      $scope.showloading=true;
+    $scope.showloadingerror=false;
      var promise=redmineService.getCurrentUserProfile($scope.userdata.domain,cacheService.getData("ajaxheader"));
      promise.then(
             function(payload) { 
@@ -44,6 +45,8 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
             },
             function(errorPayload) {
                 console.error('failure loading movie', errorPayload);
+                $scope.showloading=false;
+                $scope.showloadingerror=true;
             });
      
   };
@@ -51,6 +54,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    $scope.promiseForProject=function(off,lim)
    {
+    $scope.showloadingerror=false;
       var promiseProjectList=redmineService.getProjectsListForProfile($scope.userdata.domain,cacheService.getData("ajaxheader"),off,lim);
       promiseProjectList.then(
           function(payload) { 
@@ -83,6 +87,8 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
           },
           function(errorPayload) {
               console.error('failure loading movie', errorPayload);
+              $scope.showloading=false;
+                $scope.showloadingerror=true;
           });
 
    };
@@ -92,6 +98,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    $scope.promiseForIssues=function(projectid,off,lim)
    {
+    $scope.showloadingerror=false;
       var promiseProjectIssueList=redmineService.getProjectIssuesWithoutTrackers($scope.userdata.domain,cacheService.getData("ajaxheader"),projectid,off,lim);
       promiseProjectIssueList.then(
           function(payload) { 
@@ -113,6 +120,8 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
           },
           function(errorPayload) {
               console.error('failure loading movie', errorPayload);
+              $scope.showloading=false;
+                $scope.showloadingerror=true;
           });
 
    };
@@ -120,11 +129,21 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    $scope.updateProjectInfo=function()
    {
+    selprj=this.selectedProject;
     $scope.showloading=true;
+    $scope.showloadingerror=false;
       console.log(this.selectedProject);
       $scope.userdata=cacheService.getData("user");
+      
+      if(selprj==undefined)
+      {
+          if($scope.currentproject!=undefined && $scope.currentproject.id!=undefined)
+          {
+            selprj=$scope.currentproject.id;
+          }
+      }
       $scope.currentproject={};
-      var promiseProjectInfo=redmineService.getProjectDetails($scope.userdata.domain,cacheService.getData("ajaxheader"),this.selectedProject);
+      var promiseProjectInfo=redmineService.getProjectDetails($scope.userdata.domain,cacheService.getData("ajaxheader"),selprj);
       promiseProjectInfo.then(
           function(payload) { 
              
@@ -143,6 +162,8 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
           function(errorPayload) {
              $scope.currentproject.errormsg="Project info not found.";
              $scope.currentproject.showcurrentprojectinfo=false;
+             $scope.showloading=false;
+                $scope.showloadingerror=true;
           });
 
    };
@@ -184,6 +205,11 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       
       
 
+   };
+
+   $scope.refreshprojectdetails=function()
+   {
+      $scope.updateProjectInfo();
    };
 
    $scope.manipulateTaskTrackers=function(payload)
