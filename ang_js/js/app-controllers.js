@@ -25,11 +25,16 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
    };
 
     
-  }]);
+  }]); 
 
 redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location',
   function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
     
+    $scope.printreport=function()
+    {
+        window.print();
+    };
+
      $scope.promiseForInit=function(off,lim)
    {
      $scope.userdata=cacheService.getData("user");
@@ -354,7 +359,10 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 redfaceapp.controller('IssueController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location',
   function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
     
-  
+   $scope.printreport=function()
+    {
+        window.print();
+    };
 
    $scope.showTrackerSplitup=function(name)
    {
@@ -386,7 +394,11 @@ redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScop
   function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
     
   
-
+     $scope.printreport=function()
+    {
+        window.print();
+    };
+    
    $scope.showTrackerSplitup=function(name)
    {
       console.log(name);
