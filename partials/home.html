@@ -1,6 +1,8 @@
 <div ng-init="init()" >
+	<div class="home_app_icon_div"><img src="images/RF_org_50.png"></div>
+	<div class="float_right_icons"><img class="small_icons" src="images/icon-refresh-128.png" ng-click="refreshprojectdetails()"/><img class="small_icons" src="images/printer.png" ng-click="printreport()"/></div>
 	<div class="loadingError" ng-show="showloadingerror"><div>Error!</div></div>
-	<button ng-click="refreshprojectdetails()">Refresh</button><button ng-click="printreport()">Print Report</button>
+	
 	<div class="menudiv" ng-include src=" 'partials/menu.html' "></div>
 	<div class="content" >
 	<div ng-show="currentproject.showcurrentprojectinfo">

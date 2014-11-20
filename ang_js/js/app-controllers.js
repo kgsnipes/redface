@@ -8,7 +8,7 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
 
    $scope.performLogin=function()
    {
-    if($scope.user.domain!=undefined && $scope.user.apiKey!=undefined && $scope.user.userName!=undefined && $scope.user.domain!="" && $scope.user.apiKey!="" && $scope.user.userName!="")
+    if($scope.user.userName!=undefined && $scope.user.apiKey!=undefined && $scope.user.userName!=undefined && $scope.user.userName!="" && $scope.user.apiKey!="" && $scope.user.userName!="")
     {
       userdata=angular.copy($scope.user);
       cacheService.setData("user",userdata);
@@ -18,10 +18,30 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
     }
     else
     {
-      $rootScope.user=angular.copy($scope.user);
-      $location.path( "/" );
+
+      if($scope.user.apiKey==undefined || $scope.user.apiKey=='')
+      {
+
+        angular.element(document.getElementById("login_apikey")).addClass("login_input_error");
+      }
+
+       if($scope.user.userName==undefined || $scope.user.userName=='')
+      {
+
+        angular.element(document.getElementById("login_username")).addClass("login_input_error");
+      }
+      
     }
    		
+   };
+
+   $scope.init=function()
+   {
+      $scope.user={};
+      $scope.user.domain='https://projects.groupfmg.com';
+      $scope.user.userName='kaushik';
+      $scope.user.apiKey='997c164b300bac708e1fed7f3f4367a2477ff0d9';
+      document.getElementById("login_username").focus();
    };
 
     
