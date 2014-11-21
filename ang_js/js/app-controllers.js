@@ -24,10 +24,18 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
 
         angular.element(document.getElementById("login_apikey")).addClass("login_input_error");
       }
+      else
+      {
+        angular.element(document.getElementById("login_apikey")).removeClass("login_input_error");
+      }
 
        if($scope.user.userName==undefined || $scope.user.userName=='')
       {
 
+        angular.element(document.getElementById("login_username")).addClass("login_input_error");
+      }
+      else
+      {
         angular.element(document.getElementById("login_username")).addClass("login_input_error");
       }
       
