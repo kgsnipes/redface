@@ -1,6 +1,6 @@
 <div ng-init="init()" >
 	<div class="home_app_icon_div"><img src="images/RF_org_50.png"></div>
-	
+	<div class="logout_icon" ng-click="logout()"><img class="small_icons" src="images/logout-512.png"></div>
 	<div class="menudiv" ng-include src=" 'partials/menu.html' "></div>
 	<div class="content" >
 	<div class="projectInfo"  ng-show="currentproject.showcurrentprojectinfo">
@@ -44,20 +44,26 @@
 		      <td ng-repeat="x in currentproject.trackerdata" ng-click="showTrackerIssues(x.id)">{{x.name}}  <br/><span>{{x.count}}</span></td>
 		    </tr>
 		</table>
+
+		<table class="overallsplit">
+			<tr>
+		      <td ng-repeat="x in currentproject.statusdata" ng-click="showStatusIssues(x.id)">{{x.name}}  <br/><span>{{x.count}}</span></td>
+		    </tr>
+		</table>
 		
 	</div>
 	<div style="width:100%;height:1px;"></div>
 	<div ng-show="currentproject.showcurrentprojectinfo" class="trackerlistingDiv">
 		<h3>Team Split</h3>
-		<div class="CSSTableGenerator margin-spacing" ng-repeat="x in currentproject.userdata" >
-		<table  >
+		<div class="" ng-repeat="x in currentproject.userdata" >
+		<table  class="teammemberlisting">
 			
 				<tr>
-					<td>Team Member Name</td>
-					<td ng-repeat="y in x.trackerdata" ng-click="showTeamMemberTrackerIssues(x.id,y.id)">
+					<th>Team Member Name</th>
+					<th ng-repeat="y in x.trackerdata" ng-click="showTeamMemberTrackerIssues(x.id,y.id)">
 						{{y.name}}  <b>({{y.count}})</b>
 				      
-					</td>
+					</th>
 				</tr>
 
 				<tr >

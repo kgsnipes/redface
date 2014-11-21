@@ -9,9 +9,14 @@ redfaceapp.service('cacheService', function() {
       return obj[key];
   };
 
+  var clearData = function(){
+      return obj=new Object();
+  };
+
   return {
     setData: setData,
-    getData: getData
+    getData: getData,
+    clearData:clearData
   };
 
 });
@@ -21,6 +26,10 @@ redfaceapp.service('redmineService', function($http) {
   
   var getCurrentUserProfile= function(domain,header) {
          return $http.get(domain+'/users/current.json',{headers:header});
+      };
+
+  var getProjectStatuses= function(domain,header) {
+         return $http.get(domain+'/issue_statuses.json',{headers:header});
       };
 
   var getProjectsListForProfile= function(domain,header,offset,limit) {
@@ -35,8 +44,12 @@ redfaceapp.service('redmineService', function($http) {
          return $http.get(domain+"/issues.json?project_id="+id+"&tracker_id="+trackerid+"&offset="+offset+"&limit="+limit,{headers:header});
       };
 
-    var getProjectIssuesWithoutTrackers= function(domain,header,id,offset,limit) {
+  var getProjectIssuesWithoutTrackers= function(domain,header,id,offset,limit) {
          return $http.get(domain+"/issues.json?project_id="+id+"&offset="+offset+"&limit="+limit,{headers:header});
+      };
+
+  var getProjectIssuesWithStatus= function(domain,header,id,statusid,offset,limit) {
+         return $http.get(domain+"/issues.json?project_id="+id+"&status_id="+statusid+"&offset="+offset+"&limit="+limit,{headers:header});
       };
 
 
@@ -45,7 +58,9 @@ redfaceapp.service('redmineService', function($http) {
     getProjectsListForProfile:getProjectsListForProfile,
     getProjectDetails:getProjectDetails,
     getProjectIssues:getProjectIssues,
-    getProjectIssuesWithoutTrackers:getProjectIssuesWithoutTrackers
+    getProjectIssuesWithoutTrackers:getProjectIssuesWithoutTrackers,
+    getProjectStatuses:getProjectStatuses,
+    getProjectIssuesWithStatus:getProjectIssuesWithStatus
   };
 
 });

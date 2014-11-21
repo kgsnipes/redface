@@ -63,6 +63,12 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
         window.print();
     };
 
+     $scope.logout=function()
+    {
+      cacheService.clearData();
+       $location.path( "/" );
+    };
+
     $scope.closeError=function()
     {
         $scope.showloadingerror=false;
@@ -80,6 +86,27 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
              
                 cacheService.setData("currentUserProfile",payload.data.user);
                 $scope.promiseForProject(0,100);
+                $scope.promiseForStatuses();
+            },
+            function(errorPayload) {
+                console.error('failure loading movie', errorPayload);
+                $scope.showloading=false;
+                $scope.showloadingerror=true;
+            });
+     
+  };
+
+   $scope.promiseForStatuses=function(off,lim)
+   {
+     
+     $scope.showloading=true;
+    $scope.showloadingerror=false;
+     var promise=redmineService.getProjectStatuses($scope.userdata.domain,cacheService.getData("ajaxheader"));
+     promise.then(
+            function(payload) { 
+             
+                cacheService.setData("redmine_statuses",payload.data.issue_statuses);
+               
             },
             function(errorPayload) {
                 console.error('failure loading movie', errorPayload);
@@ -150,6 +177,43 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
             else
             {
               $scope.showloading=false;
+              statuses=cacheService.getData("redmine_statuses");
+              if(statuses.length>0)
+              {
+                for(i=0;i<statuses.length;i++)
+                    $scope.promiseForIssuesWithStatus($scope.currentproject.id,statuses[i].id,0,100);
+              }
+            }
+            
+            cacheService.setData("currentProject",angular.copy($scope.currentproject));
+            
+           
+          },
+          function(errorPayload) {
+              console.error('failure loading movie', errorPayload);
+              $scope.showloading=false;
+                $scope.showloadingerror=true;
+          });
+
+   };
+
+   $scope.promiseForIssuesWithStatus=function(projectid,statusid,off,lim)
+   {
+      $scope.showloadingerror=false;
+      var promiseProjectIssueListWithStatus=redmineService.getProjectIssuesWithStatus($scope.userdata.domain,cacheService.getData("ajaxheader"),projectid,statusid,off,lim);
+
+      promiseProjectIssueListWithStatus.then(
+          function(payload) { 
+            
+            $scope.manipulateTaskTrackersWithStatus(payload);
+
+            if(payload.data.total_count>off)
+            {
+              $scope.promiseForIssuesWithStatus(projectid,statusid,off+lim,lim);
+            }
+            else
+            {
+              $scope.showloading=false;
             }
             
             cacheService.setData("currentProject",angular.copy($scope.currentproject));
@@ -189,12 +253,14 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
             $scope.currentproject.id=payload.data.project.id;
             $scope.currentproject.identifier=payload.data.project.identifier;
             $scope.currentproject.description=payload.data.project.description;
-            $scope.currentproject.createdOn=moment(payload.data.project.created_on).format("MMM D, YYYY");
+            $scope.currentproject.createdOn=moment(payload.data.project.created_on).format("dddd, MMMM Do YYYY, h:mm:ss a");
             $scope.currentproject.showcurrentprojectinfo=true;
             $scope.currentproject.trackers=payload.data.project.trackers;
             cacheService.setData("currentProject",angular.copy($scope.currentproject));
 
             $scope.promiseForIssues($scope.currentproject.id,0,100);
+
+           
            
           },
           function(errorPayload) {
@@ -277,6 +343,43 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       $location.path( "/unassignedissues" );
    };
 
+    $scope.showStatusIssues=function(id)
+   {
+    console.log(id);
+      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.statusdata[id+''].issue));
+      //console.log($scope.currentproject.trackerdata[id+'']);
+      $location.path( "/unassignedissues" );
+   };
+
+   $scope.manipulateTaskTrackersWithStatus=function(payload)
+   {
+      if(payload.data.issues!=undefined && payload.data.issues.length>0)
+      {
+        if($scope.currentproject.statusdata==undefined)
+          {
+              $scope.currentproject.statusdata={};
+          }
+
+          for(i=0;i<payload.data.issues.length;i++)
+          {
+              if($scope.currentproject.statusdata[payload.data.issues[i].status.id+'']==undefined)
+              {
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+'']={};
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].id=payload.data.issues[i].status.id;
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].name=payload.data.issues[i].status.name;
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].count=1;
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].issue=[];
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+              }
+              else
+              {
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].count++;
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+              }
+          }
+      }
+   };
+
    $scope.manipulateTaskTrackers=function(payload)
    {
       if(payload.data.issues!=undefined && payload.data.issues.length>0)
@@ -308,7 +411,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               {
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+'']={};
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid=[];
-                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id});
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count=1;
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].name=payload.data.issues[i].tracker.name;
                  $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].id=payload.data.issues[i].tracker.id;
@@ -316,7 +419,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               }
               else
               {
-                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id});
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
                  $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count++;
               }
 
@@ -331,7 +434,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               {
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']={};
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid=[];
-                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id});
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount=1;
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].name=payload.data.issues[i].assigned_to.name;
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].id=payload.data.issues[i].assigned_to.id;
@@ -339,7 +442,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               }
               else if(payload.data.issues[i].assigned_to!=undefined && payload.data.issues[i].assigned_to.id!=undefined && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']!=undefined)
               {
-                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id});
+                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount++;
               }
 
@@ -423,8 +526,8 @@ redfaceapp.controller('IssueController', ['$scope', '$http','$rootScope','cacheS
     
   }]);
 
-redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location',
-  function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
+redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location','$document',
+  function ($scope, $http,$rootScope,cacheService,redmineService,$location,$document) {
     
   
      $scope.printreport=function()
@@ -444,8 +547,6 @@ redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScop
       $scope.currentproject=cacheService.getData("currentProject");
      $scope.issuedata = cacheService.getData("currentMemberDetail");
      
-      
-
    };
 
    $scope.gotoProjectDetails=function()

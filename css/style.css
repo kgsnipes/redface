@@ -226,3 +226,64 @@ input:focus{
 	font-family: 'Roboto-Regular';
 
 }
+
+
+.teammemberlisting {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#444;
+	border-width: 1px;
+	border-color: #ff5b5b;
+	border-collapse: collapse;
+	font-family: 'Roboto-Medium';
+	font-size: 15px; 
+	border-left: 3px;
+	margin-top:30px;
+}
+.teammemberlisting th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #fff;
+	background-color: #ff5b5b;
+	color: #fff;
+	font-weight: bold;
+	font-family: 'Roboto-Thin';
+}
+.teammemberlisting td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #ff5b5b;
+	background-color: #ffffff;
+}
+
+.issuelistingdivheading 
+{
+	margin-left: 10px;
+	text-transform: uppercase;
+	font-size: 20px;
+	font-family: 'Roboto-Regular';
+	color: #ff4747;
+}
+
+.teammemberlisting a 
+{
+	color: #444;
+}
+
+.float_right_icons_issues
+{
+	float: right;
+}
+
+.logout_icon
+{
+	float: right;
+	margin-top: -41px;
+}
+
+.logout_icon img 
+{
+	margin-top:-20px;
+}
