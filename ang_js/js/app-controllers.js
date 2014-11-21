@@ -55,6 +55,11 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
         window.print();
     };
 
+    $scope.closeError=function()
+    {
+        $scope.showloadingerror=false;
+    };
+
      $scope.promiseForInit=function(off,lim)
    {
      $scope.userdata=cacheService.getData("user");
@@ -176,7 +181,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
             $scope.currentproject.id=payload.data.project.id;
             $scope.currentproject.identifier=payload.data.project.identifier;
             $scope.currentproject.description=payload.data.project.description;
-            $scope.currentproject.createdOn=payload.data.project.created_on;
+            $scope.currentproject.createdOn=moment(payload.data.project.created_on).format("MMM D, YYYY");
             $scope.currentproject.showcurrentprojectinfo=true;
             $scope.currentproject.trackers=payload.data.project.trackers;
             cacheService.setData("currentProject",angular.copy($scope.currentproject));

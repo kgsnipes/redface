@@ -1,11 +1,17 @@
-<ul>
-	<li>
-		<label>Projects</label>
+<table>
+	<tr>
+		<td>
+		<label class="select_project">Select a Project</label>
+	</td>
+	<td>
 		<select ng-model="selectedProject" ng-change="updateProjectInfo()">
 			 <option ng-repeat="x in projects.projects" value="{{x.id}}">
 		      {{ x.name }}
 		    </option>
 		</select>
-	</li>
+		</td>
+		<td><span ng-show="currentproject.showcurrentprojectinfo" class="float_right_icons"><img class="small_icons" src="images/icon-refresh-128.png" ng-click="refreshprojectdetails()"/><img class="small_icons" src="images/printer.png" ng-click="printreport()"/></span></td>
+	</tr>
+	
 	
 </ul>
