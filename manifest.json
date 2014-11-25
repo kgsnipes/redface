@@ -11,7 +11,9 @@
     "matches": ["*://projects.groupfmg.com/*"]
   },
   "permissions":[
-            "*://projects.groupfmg.com/*"
+            "*://projects.groupfmg.com/*",
+            "fileSystem",
+            "storage"
   				],
   "icons": { "16": "images/RF_org_16.png", "128": "images/RF_org_128.png" }
 }

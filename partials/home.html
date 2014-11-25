@@ -12,7 +12,7 @@
 			</tr>
 			<tr>
 				<td><label>Project Description:&nbsp;&nbsp;</label></td>
-				<td>{{currentproject.description}}</td>
+				<td ng-show="currentproject.description">{{currentproject.description}}</td>
 			</tr>
 			<tr>
 				<td><label>Project ID:&nbsp;&nbsp;</label></td>
@@ -48,6 +48,12 @@
 		<table class="overallsplit">
 			<tr>
 		      <td ng-repeat="x in currentproject.statusdata" ng-click="showStatusIssues(x.id)">{{x.name}}  <br/><span>{{x.count}}</span></td>
+		    </tr>
+		</table>
+
+		<table class="overallsplit">
+			<tr>
+		      <td ng-repeat="x in currentproject.customdata" ng-click="showCustomIssues(x.name)">{{x.name}}  <br/><span>{{x.count}}</span></td>
 		    </tr>
 		</table>
 		

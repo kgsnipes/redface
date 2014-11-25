@@ -6,6 +6,7 @@ html
 .apppage
 {
 	width:100%;
+	overflow: auto;
 }
 
 .login_form
@@ -44,6 +45,7 @@ input:focus{
 	font-size: 15px;
 	font-family: 'Roboto-Regular';
 	margin-top:20px;
+	color: #fff;
 }
 
 .login_form button:active

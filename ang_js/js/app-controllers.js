@@ -55,12 +55,55 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
     
   }]); 
 
-redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location',
-  function ($scope, $http,$rootScope,cacheService,redmineService,$location) {
+redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location','$window',
+  function ($scope, $http,$rootScope,cacheService,redmineService,$location,$window) {
     
     $scope.printreport=function()
     {
-        window.print();
+        $window.print();
+        // $scope.writesamplefile();
+    };
+
+    $scope.writesamplefile=function()
+    {
+
+     
+      /*
+      chrome.fileSystem.chooseEntry({type: 'openFile'}, function(readOnlyEntry) {
+
+        console.log(readOnlyEntry);
+
+            chrome.fileSystem.getWritableEntry(readOnlyEntry, function(writableFileEntry) {
+        writableFileEntry.createWriter(function(writer) {
+          writer.onerror = $scope.writesamplefileerrorhandler;
+          writer.onwriteend = callback;
+
+        chosenFileEntry.file(function(file) {
+          writer.write(file);
+        });
+      }, $scope.writesamplefileerrorhandler);
+    });
+});
+*/
+        /*  chrome.fileSystem.getWritableEntry(chrome.fileSystem.chooseEntry({type: 'openFile'}, function(readOnlyEntry) {
+}), function(writableFileEntry) {
+    writableFileEntry.createWriter(function(writer) {
+      writer.onerror = $scope.writesamplefileerrorhandler;
+      writer.onwriteend = callback;
+
+    chosenFileEntry.file(function(file) {
+      writer.write(file);
+    });
+  }, $scope.writesamplefileerrorhandler);
+});
+        */
+
+        
+    };
+
+    $scope.writesamplefileerrorhandler=function()
+    {
+        console.log("file write error");
     };
 
      $scope.logout=function()
@@ -200,6 +243,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
    $scope.promiseForIssuesWithStatus=function(projectid,statusid,off,lim)
    {
       $scope.showloadingerror=false;
+      $scope.showloading=true;
       var promiseProjectIssueListWithStatus=redmineService.getProjectIssuesWithStatus($scope.userdata.domain,cacheService.getData("ajaxheader"),projectid,statusid,off,lim);
 
       promiseProjectIssueListWithStatus.then(
@@ -351,6 +395,14 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       $location.path( "/unassignedissues" );
    };
 
+    $scope.showCustomIssues=function(id)
+   {
+    console.log(id);
+      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.customdata[id+''].issue));
+      //console.log($scope.currentproject.trackerdata[id+'']);
+      $location.path( "/unassignedissues" );
+   };
+
    $scope.manipulateTaskTrackersWithStatus=function(payload)
    {
       if(payload.data.issues!=undefined && payload.data.issues.length>0)
@@ -379,6 +431,44 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
           }
       }
    };
+
+   $scope.manipulateTaskTrackersWithSeverity=function(payload)
+   {
+      if(payload.data.issues!=undefined && payload.data.issues.length>0)
+      {
+        if($scope.currentproject.customdata==undefined)
+          {
+              $scope.currentproject.customdata={};
+          }
+
+          for(i=0;i<payload.data.issues.length;i++)
+          {
+            if(payload.data.issues[i].custom_fields!=undefined && payload.data.issues[i].custom_fields.length>0)
+            {
+              for(j=0;j<payload.data.issues[i].custom_fields.length;j++)
+              {
+                   if(payload.data.issues[i].custom_fields[j].name=='Severity' && (payload.data.issues[i].custom_fields[j].value!=undefined || payload.data.issues[i].custom_fields[j].value!='')  && $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]==undefined)
+                    {
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]={};
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].name=payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value;
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count=1;
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue=[];
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                    }
+                    else if(payload.data.issues[i].custom_fields[j].name=='Severity' && (payload.data.issues[i].custom_fields[j].value!=undefined || payload.data.issues[i].custom_fields[j].value!='')  && $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]!=undefined)
+                    {
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count++;
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                    }
+
+              }
+             
+            }
+              
+          }
+      }
+   };
+
 
    $scope.manipulateTaskTrackers=function(payload)
    {
@@ -483,6 +573,8 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               
           }
       }
+
+      $scope.manipulateTaskTrackersWithSeverity(payload);
    };
 
   
