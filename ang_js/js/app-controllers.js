@@ -569,10 +569,38 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
                   $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata[payload.data.issues[i].status.id+''].count++;
                 }
               }
+                if(payload.data.issues[i].assigned_to!=undefined  && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata==undefined )
+                {
+                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata={};
+                }
+
+               if(payload.data.issues[i].assigned_to!=undefined  && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']!=undefined && payload.data.issues[i].custom_fields!=undefined && payload.data.issues[i].custom_fields.length>0)
+                {
+                  for(j=0;j<payload.data.issues[i].custom_fields.length;j++)
+                  {
+                       if(payload.data.issues[i].custom_fields[j].name=='Severity' && (payload.data.issues[i].custom_fields[j].value!=undefined || payload.data.issues[i].custom_fields[j].value!='')  && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]==undefined)
+                        {
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]={};
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].name=payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value;
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count=1;
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue=[];
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                        }
+                        else if(payload.data.issues[i].custom_fields[j].name=='Severity' && (payload.data.issues[i].custom_fields[j].value!=undefined || payload.data.issues[i].custom_fields[j].value!='')  && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]!=undefined)
+                        {
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count++;
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                        }
+
+                  }
+                 
+                }
+
 
               
           }
       }
+      console.log($scope.currentproject.userdata.customdata);
 
       $scope.manipulateTaskTrackersWithSeverity(payload);
    };

@@ -70,6 +70,7 @@
 						{{y.name}}  <b>({{y.count}})</b>
 				      
 					</th>
+					<th>Severity</th>
 				</tr>
 
 				<tr >
@@ -78,6 +79,13 @@
 						<ul>
 				      	 <li ng-repeat="z in y.statusdata">
 				      	 	<b>{{z.name}}</b> : <b>{{z.count}}</b>
+				      	 </li>
+				      </ul>
+					</td>
+					<td>
+						<ul>
+				      	 <li ng-repeat="p in x.customdata">
+				      	 	<b>{{p.name}}</b> : <b>{{p.count}}</b>
 				      	 </li>
 				      </ul>
 					</td>
