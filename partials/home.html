@@ -85,7 +85,7 @@
 					<td>
 						<ul>
 				      	 <li ng-repeat="p in x.customdata">
-				      	 	<b>{{p.name}}</b> : <b>{{p.count}}</b>
+				      	 	<a ng-click="showTeamSeverityIssues(x.id,p.name)"><b>{{p.name}}</b> : <b>{{p.count}}</b></a>
 				      	 </li>
 				      </ul>
 					</td>

@@ -349,6 +349,16 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       $location.path( "/unassignedissues" );
    };
 
+    $scope.showTeamSeverityIssues=function(id,tid)
+   {console.log(tid);
+      userdata=$scope.currentproject.userdata[id+''].customdata[tid];
+      issueid=userdata.issue;
+     
+      cacheService.setData("currentMemberDetail",angular.copy(issueid));
+      console.log(id);
+      $location.path( "/unassignedissues" );
+   };
+
    $scope.init=function()
    {
       console.log("hello");
