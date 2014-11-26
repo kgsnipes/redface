@@ -9,12 +9,16 @@
 			<th>Title</th>
 			<th>Status</th>
 			<th>Date</th>
+			<th>Author</th>
+			<th>Asignee</th>
 		</tr>
 		<tr ng-repeat="x in issuedata">
 			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issueid}}</b></a></td>
 			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issuename}}</b></a></td>
 			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issuestatus.name}}</b></a></td>
 			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issuedate.date}}</b></a></td>
+			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issueauthor.name}}</b></a></td>
+			<td><a href="{{userdata.domain}}/issues/{{x.issueid}}/" target="_blank"><b>{{x.issueasignee.name}}</b></a></td>
 		</tr>
 	</table>
 </div>

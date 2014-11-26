@@ -297,7 +297,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
             $scope.currentproject.id=payload.data.project.id;
             $scope.currentproject.identifier=payload.data.project.identifier;
             $scope.currentproject.description=payload.data.project.description;
-            $scope.currentproject.createdOn=moment(payload.data.project.created_on).format("dddd, MMMM Do YYYY, h:mm:ss a");
+            $scope.currentproject.createdOn=moment(payload.data.project.created_on).format("D - MMM - YYYY, h:mm:ss a");
             $scope.currentproject.showcurrentprojectinfo=true;
             $scope.currentproject.trackers=payload.data.project.trackers;
             cacheService.setData("currentProject",angular.copy($scope.currentproject));
@@ -412,6 +412,13 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       //console.log($scope.currentproject.trackerdata[id+'']);
       $location.path( "/unassignedissues" );
    };
+   $scope.showBugIssues=function(id)
+   {
+    console.log(id);
+      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.bugsdata[id+''].issue));
+      //console.log($scope.currentproject.trackerdata[id+'']);
+      $location.path( "/unassignedissues" );
+   };
 
    $scope.manipulateTaskTrackersWithStatus=function(payload)
    {
@@ -431,12 +438,12 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
                 $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].name=payload.data.issues[i].status.name;
                 $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].count=1;
                 $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].issue=[];
-                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
               }
               else
               {
                 $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].count++;
-                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                $scope.currentproject.statusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
               }
           }
       }
@@ -463,12 +470,49 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
                       $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].name=payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value;
                       $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count=1;
                       $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue=[];
-                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
                     }
                     else if(payload.data.issues[i].custom_fields[j].name=='Severity' && (payload.data.issues[i].custom_fields[j].value!=undefined || payload.data.issues[i].custom_fields[j].value!='')  && $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]!=undefined)
                     {
                       $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count++;
-                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                      $scope.currentproject.customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                    }
+
+              }
+             
+            }
+              
+          }
+      }
+   };
+
+    $scope.manipulateTaskTrackersWithBugsSeverity=function(payload)
+   {
+      if(payload.data.issues!=undefined && payload.data.issues.length>0)
+      {
+        if($scope.currentproject.bugsdata==undefined)
+          {
+              $scope.currentproject.bugsdata={};
+          }
+
+          for(i=0;i<payload.data.issues.length;i++)
+          {
+            if(payload.data.issues[i].tracker.name=='Issue Tracker' && payload.data.issues[i].custom_fields!=undefined && payload.data.issues[i].custom_fields.length>0)
+            {
+              for(j=0;j<payload.data.issues[i].custom_fields.length;j++)
+              {
+                   if(payload.data.issues[i].custom_fields[j].name.indexOf('Severity')!=-1 && (payload.data.issues[i].custom_fields[j].value!=undefined || payload.data.issues[i].custom_fields[j].value!='')  && $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]==undefined)
+                    {
+                      $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]={};
+                      $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].name=payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value;
+                      $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count=1;
+                      $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue=[];
+                      $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
+                    }
+                    else if(payload.data.issues[i].custom_fields[j].name.indexOf('Severity')!=-1 && payload.data.issues[i].custom_fields[j].name=='Severity' && (payload.data.issues[i].custom_fields[j].value!=undefined || payload.data.issues[i].custom_fields[j].value!='')  && $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]!=undefined)
+                    {
+                      $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count++;
+                      $scope.currentproject.bugsdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
                     }
 
               }
@@ -511,7 +555,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               {
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+'']={};
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid=[];
-                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count=1;
                 $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].name=payload.data.issues[i].tracker.name;
                  $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].id=payload.data.issues[i].tracker.id;
@@ -519,14 +563,14 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               }
               else
               {
-                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
                  $scope.currentproject.trackerdata[payload.data.issues[i].tracker.id+''].count++;
               }
 
               //user data
               if(payload.data.issues[i].assigned_to==undefined)
               {
-                $scope.currentproject.issuedata.unassigned.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status});
+                $scope.currentproject.issuedata.unassigned.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'issueauthor':payload.data.issues[i].author});
                  $scope.currentproject.issuedata.unassignedcount++;
               }
              
@@ -534,7 +578,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               {
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']={};
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid=[];
-                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount=1;
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].name=payload.data.issues[i].assigned_to.name;
                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].id=payload.data.issues[i].assigned_to.id;
@@ -542,7 +586,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               }
               else if(payload.data.issues[i].assigned_to!=undefined && payload.data.issues[i].assigned_to.id!=undefined && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+'']!=undefined)
               {
-                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                 $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
                  $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount++;
               }
 
@@ -594,12 +638,12 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
                           $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].name=payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value;
                           $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count=1;
                           $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue=[];
-                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
                         }
                         else if(payload.data.issues[i].custom_fields[j].name=='Severity' && (payload.data.issues[i].custom_fields[j].value!=undefined || payload.data.issues[i].custom_fields[j].value!='')  && $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value]!=undefined)
                         {
                           $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].count++;
-                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("dddd, MMMM Do YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)}});
+                          $scope.currentproject.userdata[payload.data.issues[i].assigned_to.id+''].customdata[payload.data.issues[i].custom_fields[j].name+'-'+payload.data.issues[i].custom_fields[j].value].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
                         }
 
                   }
@@ -612,7 +656,8 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       }
       console.log($scope.currentproject.userdata.customdata);
 
-      $scope.manipulateTaskTrackersWithSeverity(payload);
+      //$scope.manipulateTaskTrackersWithSeverity(payload);
+      $scope.manipulateTaskTrackersWithBugsSeverity(payload);
    };
 
   

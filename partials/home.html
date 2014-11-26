@@ -38,22 +38,23 @@
 	</div>
 	
 	<div ng-show="currentproject.showcurrentprojectinfo" class="trackerlistingDiv">
-		<h3>Overall Split</h3>
+		<h3>Overall Split of Trackers</h3>
 		<table class="overallsplit">
 			<tr>
 		      <td ng-repeat="x in currentproject.trackerdata" ng-click="showTrackerIssues(x.id)">{{x.name}}  <br/><span>{{x.count}}</span></td>
 		    </tr>
 		</table>
-
+		<h3>Overall Split of Statuses</h3>
 		<table class="overallsplit">
 			<tr>
 		      <td ng-repeat="x in currentproject.statusdata" ng-click="showStatusIssues(x.id)">{{x.name}}  <br/><span>{{x.count}}</span></td>
 		    </tr>
 		</table>
-
+		
+		<h3>Overall Split of Bugs by Severity</h3>
 		<table class="overallsplit">
 			<tr>
-		      <td ng-repeat="x in currentproject.customdata" ng-click="showCustomIssues(x.name)">{{x.name}}  <br/><span>{{x.count}}</span></td>
+		      <td ng-repeat="x in currentproject.bugsdata" ng-click="showBugIssues(x.name)">{{x.name}}  <br/><span>{{x.count}}</span></td>
 		    </tr>
 		</table>
 		

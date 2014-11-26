@@ -1,0 +1,295 @@
+@media print {
+
+	html
+{
+	overflow: auto;
+}
+
+.apppage
+{
+	width:100%;
+	overflow: auto;
+}
+
+.login_form
+{
+	width:50%;
+	margin: 0 auto;
+	margin-top: 20%;
+}
+
+.login_form input[type="text"]
+{
+	border-top:1px solid #fff;
+	border-left:1px solid #fff;
+	border-right:1px solid #fff;
+	border-bottom:1px solid #555;
+	font-size: 20px;
+	font-family: 'Roboto-Regular';
+	margin-top:20px;
+	color: #444;
+}
+
+.login_input_error
+{
+
+	border-bottom:1px solid #ff4747 !important;
+}
+
+input:focus{
+    outline: 0;
+}
+
+.login_form button
+{
+	border: 1px solid #ff4747;
+	background-color: #ff5b5b;
+	font-size: 15px;
+	font-family: 'Roboto-Regular';
+	margin-top:20px;
+	color: #fff;
+}
+
+.login_form button:active
+{
+	border: 1px solid #999;
+	background-color: #fff;
+	font-size: 15px;
+	
+}
+
+
+.application_name
+{
+	font-family: 'Roboto-Thin';
+	font-size: 40px;
+	color: #ff4747;
+}
+
+.login_icon_div
+{
+	margin-bottom: -48px;
+}
+
+.application_name_div
+{
+	margin-left:50px;
+}
+
+.home_app_icon_div
+{
+	width: 80%;
+}
+.small_icons
+{
+	width: 25px;
+	height: 25px;
+	margin-left: 15px;
+}
+
+.float_right_icons
+{
+	
+
+}
+
+.menudiv
+{
+	font-family: 'Roboto-Regular'
+	color:#444;
+}
+
+.menudiv table
+{
+	margin-left:50px;
+}
+
+
+.menudiv select
+{
+	width: 100%;
+	font-size: 15px;
+	color:#444;
+	border: 1px solid #444;
+	font-family: 'Roboto-Medium';
+}
+
+.menudiv .select_project
+{
+	color:#444;
+	font-size: 15px;
+	font-family: 'Roboto-Light';
+	margin-right: 10px;
+	text-transform: uppercase;
+}
+
+.projectInfo
+{
+	margin:0 auto;
+	list-style: none;
+	margin-top: 30px;
+}
+
+.projectInfo label
+{
+	font-family: 'Roboto-Regular';
+	text-transform: uppercase;
+	font-size: 15px;
+	color: #444;
+}
+.projectInfo table
+{
+	margin-left: 50px;
+}
+
+.projectInfo table tr td
+{
+	font-family: 'Roboto-Regular';
+	font-size: 15px;
+	color:#444;
+}
+
+#loading
+{
+	width: 40%;
+	position: fixed;
+	top:0px;
+	left:60%;
+	border: 1px solid #ff4747;
+	background-color: #ff5b5b;
+	color: #fff;
+	font-size: 20px;
+	font-family: 'Roboto-Regular';
+
+}
+
+#loading div 
+{
+	margin-left: 10px;
+}
+
+#loadingError
+{
+	width: 40%;
+	position: fixed;
+	top:0px;
+	left:60%;
+	border: 1px solid #ff4747;
+	background-color: #ff5b5b;
+	color: #fff;
+	font-size: 20px;
+	font-family: 'Roboto-Regular';
+
+}
+
+#loadingError div 
+{
+	margin-left: 10px;
+}
+
+.errorcloseButton
+{
+	float: left;
+	margin-left:10px;
+	color: #fff;
+	font-size: 20px;
+	font-family: 'Roboto-Regular';
+	width:20%;
+}
+
+.errorMsg
+{
+	width: 80%;
+}
+
+.trackerlistingDiv table
+{
+	margin-left: 50px;
+}
+.trackerlistingDiv h3 
+{
+	margin-left: 50px;
+	text-transform: uppercase;
+	font-size: 20px;
+	font-family: 'Roboto-Regular';
+	color: #ff4747;
+}
+
+.overallsplit tr td
+{
+	text-align: center;
+	background-color: #ff5b5b;
+	color: #fff;
+	padding: 6px;
+	border-radius: 10px;
+}
+
+.overallsplit tr td span
+{
+	font-size: 25px;
+	font-family: 'Roboto-Regular';
+
+}
+
+
+.teammemberlisting {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#444;
+	border-width: 1px;
+	border-color: #ff5b5b;
+	border-collapse: collapse;
+	font-family: 'Roboto-Medium';
+	font-size: 15px; 
+	border-left: 3px;
+	margin-top:30px;
+}
+.teammemberlisting th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #ff5b5b;
+	background-color: #ff5b5b;
+	color: #fff;
+	font-weight: bold;
+	font-family: 'Roboto-Thin';
+}
+.teammemberlisting td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #ff5b5b;
+	background-color: #ffffff;
+}
+
+.issuelistingdivheading 
+{
+	margin-left: 10px;
+	text-transform: uppercase;
+	font-size: 20px;
+	font-family: 'Roboto-Regular';
+	color: #ff4747;
+}
+
+.teammemberlisting a 
+{
+	color: #444;
+}
+
+.float_right_icons_issues
+{
+	float: right;
+}
+
+.logout_icon
+{
+	float: right;
+	margin-top: -41px;
+}
+
+.logout_icon img 
+{
+	margin-top:-20px;
+}
+
+}
