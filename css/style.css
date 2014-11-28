@@ -289,3 +289,9 @@ input:focus{
 {
 	margin-top:-20px;
 }
+
+.projectInfo table tr td label
+{
+	color: #ff4747;
+	font-weight: bold;
+}

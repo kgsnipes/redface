@@ -1,11 +1,11 @@
 redfaceapp.service('cacheService', function() {
   var obj = new Object();
 
-  var setData = function(key,value) {
+  var setData = function(key,value,callback) {
      obj[key]=value;
   };
 
-  var getData = function(key){
+  var getData = function(key,callback){
       return obj[key];
   };
 
@@ -20,6 +20,40 @@ redfaceapp.service('cacheService', function() {
   };
 
 });
+
+redfaceapp.service('asyncCacheService', function() {
+  var obj = new Object();
+
+  var setData = function(key,value,callback) {
+    var obj = {};
+    obj[name] = value;
+     chrome.storage.local.set(obj, function() {
+        if(callback) callback();
+    });
+  };
+
+  var getData = function(key,callback){
+      chrome.storage.local.get(key, function(r) {
+        if (callback) {
+           console.log(r);
+            callback(r[key]);
+        }
+       
+    });
+  };
+
+  var clearData = function(){
+      return obj=new Object();
+  };
+
+  return {
+    setData: setData,
+    getData: getData,
+    clearData:clearData
+  };
+
+});
+
 
 
 redfaceapp.service('redmineService', function($http) {

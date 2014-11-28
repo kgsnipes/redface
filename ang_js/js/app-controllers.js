@@ -10,11 +10,14 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
    {
     if($scope.user.userName!=undefined && $scope.user.apiKey!=undefined && $scope.user.userName!=undefined && $scope.user.userName!="" && $scope.user.apiKey!="" && $scope.user.userName!="")
     {
+
       userdata=angular.copy($scope.user);
       cacheService.setData("user",userdata);
       cacheService.setData("ajaxheader",{ 'X-Redmine-API-Key':userdata.apiKey});
+      
+       $location.path( "/home" );
        
-      $location.path( "/home" );
+      
     }
     else
     {
@@ -47,8 +50,14 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
    {
       $scope.user={};
       $scope.user.domain='https://projects.groupfmg.com';
-      $scope.user.userName='kaushik';
-      $scope.user.apiKey='997c164b300bac708e1fed7f3f4367a2477ff0d9';
+      userdata=cacheService.getData("user");
+      if(userdata)
+      {
+         $scope.user.userName=userdata.userName;
+         $scope.user.apiKey=userdata.apiKey;
+      }
+          
+       
       document.getElementById("login_username").focus();
    };
 
@@ -119,7 +128,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
      $scope.promiseForInit=function(off,lim)
    {
-     $scope.userdata=cacheService.getData("user");
+     //$scope.userdata=cacheService.getData("user");
      //get current user data
      $scope.showloading=true;
     $scope.showloadingerror=false;
@@ -279,7 +288,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
     $scope.showloading=true;
     $scope.showloadingerror=false;
       console.log(this.selectedProject);
-      $scope.userdata=cacheService.getData("user");
+     // $scope.userdata=cacheService.getData("user");
       
       if(selprj==undefined)
       {
@@ -365,22 +374,25 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
       $scope.currentproject=cacheService.getData("currentProject");
       $scope.projects=cacheService.getData("userProjectList");
+       $scope.userdata=cacheService.getData("user");
+     
+       if($scope.userdata)
+       {
+        if($scope.currentproject==undefined && $scope.projects==undefined)
+          {
+              $scope.currentproject={};
+              $scope.currentproject.errormsg="Select a project.";
+              $scope.currentproject.showcurrentprojectinfo=false;
+              $scope.currentproject.showtrackerdata=false;
+              $scope.projects=undefined;
+             $scope.promiseForInit();
+          }
+          else
+          {
 
-      if($scope.currentproject==undefined && $scope.projects==undefined)
-      {
-          $scope.currentproject={};
-          $scope.currentproject.errormsg="Select a project.";
-          $scope.currentproject.showcurrentprojectinfo=false;
-          $scope.currentproject.showtrackerdata=false;
-          $scope.projects=undefined;
-         $scope.promiseForInit();
-      }
-      else
-      {
-
-      }
-      
-      
+          }
+       }
+          
 
    };
 
