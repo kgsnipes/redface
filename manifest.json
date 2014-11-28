@@ -12,7 +12,8 @@
   },
   "permissions":[
             "*://projects.groupfmg.com/*",
-            "storage"
+            "storage",
+            {"fileSystem": ["write"]}
   				],
   "icons": { "16": "images/RF_org_16.png", "128": "images/RF_org_128.png" }
 }

@@ -51,6 +51,9 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
       $scope.user={};
       $scope.user.domain='https://projects.groupfmg.com';
       userdata=cacheService.getData("user");
+      userdata={};
+      userdata.userName='kaushik';
+      userdata.apiKey='997c164b300bac708e1fed7f3f4367a2477ff0d9';
       if(userdata)
       {
          $scope.user.userName=userdata.userName;
@@ -64,8 +67,8 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
     
   }]); 
 
-redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location','$window',
-  function ($scope, $http,$rootScope,cacheService,redmineService,$location,$window) {
+redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location','$window','csvService',
+  function ($scope, $http,$rootScope,cacheService,redmineService,$location,$window,csvService) {
     
     $scope.printreport=function()
     {
@@ -73,47 +76,125 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
         // $scope.writesamplefile();
     };
 
-    $scope.writesamplefile=function()
+    $scope.getCSVData=function()
+    {
+        $scope.csvContent="";
+         $scope.csvContent+='Project Info;\r\n';
+         $scope.csvContent+='\r\n';
+        $scope.getProjectInfoCSV();
+         $scope.csvContent+='\r\n';
+         $scope.csvContent+='Overall Tracker Split;\r\n';
+        $scope.getProjectBubblesInfoCSV();
+         $scope.csvContent+='\r\n';
+         $scope.csvContent+='Overall Status Split;\r\n';
+        $scope.getProjectStatusBubblesInfoCSV();
+         $scope.csvContent+='\r\n';
+         $scope.csvContent+='Overall Bug Severity Split;\r\n';
+        $scope.getProjectBugsBubblesInfoCSV();
+         $scope.csvContent+='\r\n';
+         $scope.csvContent+='Overall Team Member Split;\r\n';
+        $scope.getProjectTeamMemberInfoCSV();
+        return  $scope.csvContent;
+    };
+
+    $scope.getProjectInfoCSV=function(csvContent){
+
+       $scope.csvContent+='Project Name;'+$scope.currentproject.name+'\r\n';
+       $scope.csvContent+='Project ID;'+$scope.currentproject.id+'\r\n';
+       $scope.csvContent+='Created On;'+$scope.currentproject.createdOn+'\r\n';
+       $scope.csvContent+='Unassigned Issues;'+$scope.currentproject.issuedata.unassignedcount+'\r\n';
+      
+    };
+
+    $scope.getProjectBubblesInfoCSV=function(csvContent){
+         console.log($scope.currentproject.trackerdata);
+        trackernames='';
+        trackercounts='';
+        for(track in $scope.currentproject.trackerdata)
+        {
+          console.log(track);
+          trackernames+=$scope.currentproject.trackerdata[track].name+';';
+          trackercounts+=$scope.currentproject.trackerdata[track].count+';';
+        }
+         $scope.csvContent+=trackernames+'\r\n';
+         $scope.csvContent+=trackercounts+'\r\n';
+      
+    };
+
+    $scope.getProjectStatusBubblesInfoCSV=function(csvContent){
+
+        trackernames='';
+        trackercounts='';
+        for(track in $scope.currentproject.statusdata)
+        {
+          trackernames+=$scope.currentproject.statusdata[track].name+';';
+          trackercounts+=$scope.currentproject.statusdata[track].count+';';
+        }
+         $scope.csvContent+=trackernames+'\r\n';
+         $scope.csvContent+=trackercounts+'\r\n';
+      
+    };
+
+    $scope.getProjectBugsBubblesInfoCSV=function(csvContent){
+
+        trackernames='';
+        trackercounts='';
+        for(track in $scope.currentproject.bugsdata)
+        {
+          trackernames+=$scope.currentproject.bugsdata[track].name+';';
+          trackercounts+=$scope.currentproject.bugsdata[track].count+';';
+        }
+         $scope.csvContent+=trackernames+'\r\n';
+         $scope.csvContent+=trackercounts+'\r\n';
+      
+    };
+
+    $scope.getProjectTeamMemberInfoCSV=function(csvContent){
+
+      
+        for(user in $scope.currentproject.userdata)
+        {
+           $scope.csvContent+='\r\n\r\n';
+           $scope.csvContent+=$scope.currentproject.userdata[user].name+';\r\n';
+
+            for(tracker in $scope.currentproject.userdata[user].trackerdata)
+            {
+              $scope.csvContent+='\r\n';
+              $scope.csvContent+=$scope.currentproject.userdata[user].trackerdata[tracker].name+';'+$scope.currentproject.userdata[user].trackerdata[tracker].count+';\r\n';
+                for(status in $scope.currentproject.userdata[user].trackerdata[tracker].statusdata)
+                {
+                    $scope.csvContent+='\r\n';
+                    $scope.csvContent+=$scope.currentproject.userdata[user].trackerdata[tracker].statusdata[status].name+';'+$scope.currentproject.userdata[user].trackerdata[tracker].statusdata[status].count+';\r\n';
+                }
+            }
+
+            for(custom in $scope.currentproject.userdata[user].customdata)
+            {
+              $scope.csvContent+='\r\n';
+              $scope.csvContent+=$scope.currentproject.userdata[user].customdata[custom].name+';'+$scope.currentproject.userdata[user].customdata[custom].count+';\r\n';
+               
+            }
+        }
+         
+      $scope.csvContent+='\r\n\r\n';
+    };
+
+    $scope.downloadReport=function()
     {
 
-     
-      /*
-      chrome.fileSystem.chooseEntry({type: 'openFile'}, function(readOnlyEntry) {
-
-        console.log(readOnlyEntry);
-
-            chrome.fileSystem.getWritableEntry(readOnlyEntry, function(writableFileEntry) {
-        writableFileEntry.createWriter(function(writer) {
-          writer.onerror = $scope.writesamplefileerrorhandler;
-          writer.onwriteend = callback;
-
-        chosenFileEntry.file(function(file) {
-          writer.write(file);
+        csvService.writeDataToFile($scope.currentproject.name,$scope.getCSVData(),"csv",function(flag){
+            if(flag)
+            {
+              console.log("success");
+            }
+            else
+            {
+              console.log("fail");
+            }
         });
-      }, $scope.writesamplefileerrorhandler);
-    });
-});
-*/
-        /*  chrome.fileSystem.getWritableEntry(chrome.fileSystem.chooseEntry({type: 'openFile'}, function(readOnlyEntry) {
-}), function(writableFileEntry) {
-    writableFileEntry.createWriter(function(writer) {
-      writer.onerror = $scope.writesamplefileerrorhandler;
-      writer.onwriteend = callback;
-
-    chosenFileEntry.file(function(file) {
-      writer.write(file);
-    });
-  }, $scope.writesamplefileerrorhandler);
-});
-        */
-
-        
     };
 
-    $scope.writesamplefileerrorhandler=function()
-    {
-        console.log("file write error");
-    };
+   
 
      $scope.logout=function()
     {

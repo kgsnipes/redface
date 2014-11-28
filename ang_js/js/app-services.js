@@ -1,3 +1,54 @@
+redfaceapp.service('csvService', function() {
+  
+  var writeDataToFile = function(projectname,content,fileformat,callback) {
+     
+     chrome.fileSystem.chooseEntry( {
+      type: 'saveFile',
+      suggestedName: projectname+moment().format("_D_MMM_YYYY")+'.csv',
+      accepts: [ { description: 'CSV files (*.'+fileformat+')',
+                   extensions: [fileformat]} ],
+      acceptsAllTypes: true
+    }, function(fileEntry){
+
+
+      fileEntry.createWriter(function(fileWriter) {
+
+      var truncated = false;
+      var blob = new Blob([content]);
+
+      fileWriter.onwriteend = function(e) {
+        if (!truncated) {
+          truncated = true;
+          // You need to explicitly set the file size to truncate
+          // any content that might have been there before
+          this.truncate(blob.size);
+          return;
+        }
+        
+      };
+
+      fileWriter.onerror = function(e) {
+        console.log("error");
+        callback(false);
+      };
+
+      fileWriter.write(blob);
+      callback(true);
+
+    });
+
+
+    });
+
+  };
+
+  
+  return {
+    writeDataToFile: writeDataToFile
+  };
+
+});
+
 redfaceapp.service('cacheService', function() {
   var obj = new Object();
 
