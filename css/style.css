@@ -3,6 +3,11 @@ html
 	overflow: auto;
 }
 
+table
+{
+	max-width: 100%;
+}
+
 .apppage
 {
 	width:100%;
@@ -295,3 +300,5 @@ input:focus{
 	color: #ff4747;
 	font-weight: bold;
 }
+
+
