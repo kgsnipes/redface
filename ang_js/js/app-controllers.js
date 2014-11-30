@@ -552,7 +552,7 @@ redfaceapp.controller('IssueController', ['$scope', '$http','$rootScope','cacheS
     
   }]);
 
-redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location','$document',
+redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScope','cacheService','redmineService','$location','$document','ngTable',
   function ($scope, $http,$rootScope,cacheService,redmineService,$location,$document) {
     
   
@@ -580,7 +580,7 @@ redfaceapp.controller('UnassignedIssueController', ['$scope', '$http','$rootScop
        $location.path( "/home" );
    };
 
-  
+   
     
     
   }]);
