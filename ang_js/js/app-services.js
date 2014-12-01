@@ -184,6 +184,8 @@ redfaceapp.service('redfaceLogicService', function() {
               }
           }
       }
+
+      
    };
 
    var manipulateTaskTrackersWithSeverity=function(currentproject,payload)
@@ -253,6 +255,46 @@ redfaceapp.service('redfaceLogicService', function() {
                     }
 
               }
+             
+            }
+              
+          }
+      }
+      
+   };
+
+var manipulateBugsStatusData=function(currentproject,payload)
+   {
+      console.log("hello");
+      if(payload.data.issues!=undefined && payload.data.issues.length>0)
+      {
+        if(currentproject.bugstatusdata==undefined)
+          {
+              currentproject.bugstatusdata={};
+          }
+
+          for(i=0;i<payload.data.issues.length;i++)
+          {
+            if(payload.data.issues[i].tracker!=undefined && payload.data.issues[i].tracker.name!=undefined && payload.data.issues[i].tracker.name=='Issue Tracker' && payload.data.issues[i].status!=undefined && payload.data.issues[i].status.name!="Closed")
+            {
+              
+                   if(currentproject.bugstatusdata[payload.data.issues[i].status.id+'']==undefined)
+                    {
+                      console.log(payload.data.issues[i]);
+                      currentproject.bugstatusdata[payload.data.issues[i].status.id+'']={};
+                      currentproject.bugstatusdata[payload.data.issues[i].status.id+''].id=payload.data.issues[i].status.id;
+                      currentproject.bugstatusdata[payload.data.issues[i].status.id+''].name=payload.data.issues[i].status.name;
+                      currentproject.bugstatusdata[payload.data.issues[i].status.id+''].count=1;
+                      currentproject.bugstatusdata[payload.data.issues[i].status.id+''].issue=[];
+                      currentproject.bugstatusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
+                    }
+                    else if(currentproject.bugstatusdata[payload.data.issues[i].status.id+'']!=undefined)
+                    {
+                      currentproject.bugstatusdata[payload.data.issues[i].status.id+''].count++;
+                      currentproject.bugstatusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
+                    }
+
+            
              
             }
               
@@ -394,12 +436,15 @@ redfaceapp.service('redfaceLogicService', function() {
         
 
       this.manipulateTaskTrackersWithBugsSeverity(currentproject,payload);
+      this.manipulateBugsStatusData(currentproject,payload);
+      
    };
   return {
     manipulateTaskTrackersWithStatus:manipulateTaskTrackersWithStatus,
     manipulateTaskTrackersWithSeverity:manipulateTaskTrackersWithSeverity,
     manipulateTaskTrackersWithBugsSeverity:manipulateTaskTrackersWithBugsSeverity,
-    manipulateTaskTrackers:manipulateTaskTrackers
+    manipulateTaskTrackers:manipulateTaskTrackers,
+    manipulateBugsStatusData:manipulateBugsStatusData
   };
 
 });

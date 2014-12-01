@@ -313,8 +313,8 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
               statuses=cacheService.getData("redmine_statuses");
               if(statuses.length>0)
               {
-                for(i=0;i<statuses.length;i++)
-                    $scope.promiseForIssuesWithStatus($scope.currentproject.id,statuses[i].id,0,100);
+                
+                    $scope.promiseForIssuesWithStatus(0,$scope.currentproject.id,statuses[0].id,0,100);
               }
             }
             
@@ -330,10 +330,11 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    };
 
-   $scope.promiseForIssuesWithStatus=function(projectid,statusid,off,lim)
+   $scope.promiseForIssuesWithStatus=function(statusindex,projectid,statusid,off,lim)
    {
       $scope.showloadingerror=false;
       $scope.showloading=true;
+       statuses=cacheService.getData("redmine_statuses");
       var promiseProjectIssueListWithStatus=redmineService.getProjectIssuesWithStatus($scope.userdata.domain,cacheService.getData("ajaxheader"),projectid,statusid,off,lim);
 
       promiseProjectIssueListWithStatus.then(
@@ -343,11 +344,16 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
             if(payload.data.total_count>off)
             {
-              $scope.promiseForIssuesWithStatus(projectid,statusid,off+lim,lim);
+              $scope.promiseForIssuesWithStatus(statusindex,projectid,statusid,off+lim,lim);
             }
             else
             {
               $scope.showloading=false;
+              if(statusindex+1<statuses.length)
+              {
+                $scope.promiseForIssuesWithStatus(statusindex+1,projectid,statuses[statusindex+1].id,0,100);
+              }
+                  
             }
             
             cacheService.setData("currentProject",angular.copy($scope.currentproject));
@@ -411,6 +417,13 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
       cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.userdata[id+'']));
       console.log(id);
       $location.path( "/issues" );
+   };
+
+   $scope.showBugsStatusIssues=function(id)
+   {
+      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.bugstatusdata[id+'']));
+      console.log(id);
+      $location.path( "/unassignedissues" );
    };
 
    $scope.showUnassignedIssues=function(id)

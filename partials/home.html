@@ -50,6 +50,13 @@
 		      <td ng-repeat="x in currentproject.statusdata" ng-click="showStatusIssues(x.id)">{{x.name}}  <br/><span>{{x.count}}</span></td>
 		    </tr>
 		</table>
+
+		<h3>Overall Split of Bugs by Status</h3>
+		<table class="overallsplit">
+			<tr>
+		      <td ng-repeat="x in currentproject.bugstatusdata" ng-click="showBugsStatusIssues(x.id)">{{x.name}}  <br/><span>{{x.count}}</span></td>
+		    </tr>
+		</table>
 		
 		<h3>Overall Split of Bugs by Severity</h3>
 		<table class="overallsplit">
