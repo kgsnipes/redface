@@ -52,7 +52,8 @@ redfaceapp.controller('WelcomeController', ['$scope', '$http','$location','$root
       $scope.user.domain='https://projects.groupfmg.com';
       userdata=cacheService.getData("user");
       userdata={};
-     
+      userdata.userName='';
+      userdata.apiKey='';
       if(userdata)
       {
          $scope.user.userName=userdata.userName;
