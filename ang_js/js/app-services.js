@@ -236,7 +236,7 @@ redfaceapp.service('redfaceLogicService', function() {
 
           for(i=0;i<payload.data.issues.length;i++)
           {
-            if(payload.data.issues[i].tracker.name=='Issue Tracker' && payload.data.issues[i].custom_fields!=undefined && payload.data.issues[i].custom_fields.length>0)
+            if(payload.data.issues[i].tracker.name=='Defect Tracker' && payload.data.issues[i].custom_fields!=undefined && payload.data.issues[i].custom_fields.length>0)
             {
               for(j=0;j<payload.data.issues[i].custom_fields.length;j++)
               {
@@ -265,22 +265,26 @@ redfaceapp.service('redfaceLogicService', function() {
 
 var manipulateBugsStatusData=function(currentproject,payload)
    {
-      console.log("hello");
+     
       if(payload.data.issues!=undefined && payload.data.issues.length>0)
       {
         if(currentproject.bugstatusdata==undefined)
           {
+             
               currentproject.bugstatusdata={};
           }
 
           for(i=0;i<payload.data.issues.length;i++)
           {
-            if(payload.data.issues[i].tracker!=undefined && payload.data.issues[i].tracker.name!=undefined && payload.data.issues[i].tracker.name=='Issue Tracker' && payload.data.issues[i].status!=undefined && payload.data.issues[i].status.name!="Closed")
+            
+            if(payload.data.issues[i].tracker!=undefined && payload.data.issues[i].tracker.name.toString().toLowerCase().indexOf('defect')>=0 && 
+                payload.data.issues[i].status!=undefined &&
+                payload.data.issues[i].status.name.toString().toLowerCase().indexOf("closed")<0)
             {
-              
+               
                    if(currentproject.bugstatusdata[payload.data.issues[i].status.id+'']==undefined)
                     {
-                      
+                       
                       currentproject.bugstatusdata[payload.data.issues[i].status.id+'']={};
                       currentproject.bugstatusdata[payload.data.issues[i].status.id+''].id=payload.data.issues[i].status.id;
                       currentproject.bugstatusdata[payload.data.issues[i].status.id+''].name=payload.data.issues[i].status.name;
@@ -290,6 +294,7 @@ var manipulateBugsStatusData=function(currentproject,payload)
                     }
                     else if(currentproject.bugstatusdata[payload.data.issues[i].status.id+'']!=undefined)
                     {
+                       console.log("14");
                       currentproject.bugstatusdata[payload.data.issues[i].status.id+''].count++;
                       currentproject.bugstatusdata[payload.data.issues[i].status.id+''].issue.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
                     }
