@@ -1,6 +1,6 @@
 <div ng-init="init()" >
 	<div class="home_app_icon_div"><img src="images/RF_org_50.png"></div>
-	<div class="logout_icon" ng-click="logout()"><img class="small_icons" src="images/logout-512.png"></div>
+	<div class="logout_icon" ng-click="logout()">Hi, {{userdata.userName}}<img class="small_icons" src="images/logout-512.png"></div>
 	<div class="menudiv" ng-include src=" 'partials/menu.html' "></div>
 	<div class="content" >
 	<div class="projectInfo"  ng-show="currentproject.showcurrentprojectinfo">

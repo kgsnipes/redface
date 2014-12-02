@@ -280,7 +280,7 @@ var manipulateBugsStatusData=function(currentproject,payload)
               
                    if(currentproject.bugstatusdata[payload.data.issues[i].status.id+'']==undefined)
                     {
-                      console.log(payload.data.issues[i]);
+                      
                       currentproject.bugstatusdata[payload.data.issues[i].status.id+'']={};
                       currentproject.bugstatusdata[payload.data.issues[i].status.id+''].id=payload.data.issues[i].status.id;
                       currentproject.bugstatusdata[payload.data.issues[i].status.id+''].name=payload.data.issues[i].status.name;

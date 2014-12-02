@@ -89,6 +89,9 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
          $scope.csvContent+='Overall Status Split;\r\n';
         $scope.getProjectStatusBubblesInfoCSV();
          $scope.csvContent+='\r\n';
+          $scope.csvContent+='Overall Status Split by Bug Status;\r\n';
+         $scope.getProjectBugsStatusBubblesInfoCSV();
+        $scope.csvContent+='\r\n';
          $scope.csvContent+='Overall Bug Severity Split;\r\n';
         $scope.getProjectBugsBubblesInfoCSV();
          $scope.csvContent+='\r\n';
@@ -129,6 +132,20 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
         {
           trackernames+=$scope.currentproject.statusdata[track].name+';';
           trackercounts+=$scope.currentproject.statusdata[track].count+';';
+        }
+         $scope.csvContent+=trackernames+'\r\n';
+         $scope.csvContent+=trackercounts+'\r\n';
+      
+    };
+
+     $scope.getProjectBugsStatusBubblesInfoCSV=function(csvContent){
+
+        trackernames='';
+        trackercounts='';
+        for(track in $scope.currentproject.bugstatusdata)
+        {
+          trackernames+=$scope.currentproject.bugstatusdata[track].name+';';
+          trackercounts+=$scope.currentproject.bugstatusdata[track].count+';';
         }
          $scope.csvContent+=trackernames+'\r\n';
          $scope.csvContent+=trackercounts+'\r\n';
@@ -421,7 +438,7 @@ redfaceapp.controller('HomeController', ['$scope', '$http','$rootScope','cacheSe
 
    $scope.showBugsStatusIssues=function(id)
    {
-      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.bugstatusdata[id+'']));
+      cacheService.setData("currentMemberDetail",angular.copy($scope.currentproject.bugstatusdata[id+''].issue));
       console.log(id);
       $location.path( "/unassignedissues" );
    };
