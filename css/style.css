@@ -301,4 +301,12 @@ input:focus{
 	font-weight: bold;
 }
 
+.logout_icon .h4
+{
+	font-size: 15px;
+	font-family: 'Roboto-Medium';
+	vertical-align: super;
+	color: #444;
+}
+
 
