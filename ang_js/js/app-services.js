@@ -363,7 +363,7 @@ var manipulateBugsStatusData=function(currentproject,payload)
                 currentproject.userdata[payload.data.issues[i].assigned_to.id+'']={};
                 currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid=[];
                 currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
-                currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount=1;
+                 currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount=1;
                 currentproject.userdata[payload.data.issues[i].assigned_to.id+''].name=payload.data.issues[i].assigned_to.name;
                 currentproject.userdata[payload.data.issues[i].assigned_to.id+''].id=payload.data.issues[i].assigned_to.id;
 
@@ -371,7 +371,7 @@ var manipulateBugsStatusData=function(currentproject,payload)
               else if(payload.data.issues[i].assigned_to!=undefined && payload.data.issues[i].assigned_to.id!=undefined && currentproject.userdata[payload.data.issues[i].assigned_to.id+'']!=undefined)
               {
                  currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issueid.push({'issueid':payload.data.issues[i].id,'issuename':payload.data.issues[i].subject,'issuestatus':payload.data.issues[i].status,'trackerid':payload.data.issues[i].tracker.id,'issuedate':{'date':moment(payload.data.issues[i].created_on).format("D - MMM - YYYY, h:mm:ss a"),'dateObj':moment(payload.data.issues[i].created_on)},'issueauthor':payload.data.issues[i].author,'issueasignee':payload.data.issues[i].assigned_to});
-                 currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount++;
+                      currentproject.userdata[payload.data.issues[i].assigned_to.id+''].issuecount++;
               }
 
               if(payload.data.issues[i].assigned_to!=undefined && currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata==undefined)
@@ -383,7 +383,17 @@ var manipulateBugsStatusData=function(currentproject,payload)
               {
                 currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+'']={};
                  currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata={};
-               currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].count=1;
+                 if(payload.data.issues[i].status.name.toString().indexOf('Fixed')==-1)
+                 {
+                  
+                  currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].count=1;
+                 }
+                 else
+                 {
+                  currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].count=0;
+                 }
+                 
+                    
                currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].id=payload.data.issues[i].tracker.id;
                currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].name=payload.data.issues[i].tracker.name;
 
@@ -391,7 +401,12 @@ var manipulateBugsStatusData=function(currentproject,payload)
               }
               else if(payload.data.issues[i].assigned_to!=undefined &&  currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+'']!=undefined )
               {
+                if(payload.data.issues[i].status.name.toString().indexOf('Fixed')==-1)
+                {
+                  console.log(payload.data.issues[i].tracker.name.toString());
                   currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].count++;
+                }
+                    
               }
 
               if(payload.data.issues[i].assigned_to!=undefined && currentproject.userdata[payload.data.issues[i].assigned_to.id+''].trackerdata[payload.data.issues[i].tracker.id+''].statusdata!=undefined)
